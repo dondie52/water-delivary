@@ -40,6 +40,7 @@ export function AssistantChatPanel({
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [aiSource, setAiSource] = useState<"gemini" | "rules" | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -66,15 +67,23 @@ export function AssistantChatPanel({
     setIsLoading(true);
 
     try {
+      const history = messages
+        .filter((item) => item.id !== "welcome")
+        .map((item) => ({ role: item.role, content: item.content }));
+
       const response = await fetch("/api/v1/assistant/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: trimmed })
+        body: JSON.stringify({ message: trimmed, history })
       });
       const payload = await response.json();
 
       if (!response.ok) {
         throw new Error(payload.error ?? "Could not get a reply");
+      }
+
+      if (payload.data?.source === "gemini" || payload.data?.source === "rules") {
+        setAiSource(payload.data.source);
       }
 
       setMessages((current) => [
@@ -124,7 +133,13 @@ export function AssistantChatPanel({
                 Free
               </span>
             </div>
-            <p className="text-xs text-primary/70">Prices, pickup, delivery & orders</p>
+            <p className="text-xs text-primary/70">
+              {aiSource === "gemini"
+                ? "Powered by Google Gemini"
+                : aiSource === "rules"
+                  ? "Quick answers (add Gemini key for full AI)"
+                  : "Prices, pickup, delivery & orders"}
+            </p>
           </div>
         </div>
         {showClose && onClose ? (

@@ -18,6 +18,8 @@ services:
         sync: false
       - key: API_KEY_21ST
         sync: false
+      - key: GOOGLE_GENERATIVE_AI_API_KEY
+        sync: false
       - key: ADMIN_PASSWORD
         sync: false
       - key: DRIVER_PASSWORD
