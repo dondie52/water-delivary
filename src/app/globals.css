@@ -70,6 +70,40 @@
   color: hsl(var(--background));
 }
 
+/* water.com-style dark navy hero base gradient */
+.hero-navy {
+  background-color: #061a4f;
+  background-image:
+    radial-gradient(120% 120% at 70% 20%, #0a4f9e 0%, #073a7d 38%, #061a4f 70%);
+}
+
+/* Radiating sunburst rays + glow behind the hero product image */
+.hero-sunburst {
+  background-image:
+    repeating-conic-gradient(
+      from 0deg at 72% 38%,
+      rgba(255, 255, 255, 0.07) 0deg 4deg,
+      rgba(255, 255, 255, 0) 4deg 12deg
+    ),
+    radial-gradient(45% 45% at 72% 38%, rgba(56, 189, 248, 0.28) 0%, rgba(56, 189, 248, 0) 70%);
+  -webkit-mask-image: radial-gradient(60% 60% at 72% 38%, #000 0%, transparent 75%);
+  mask-image: radial-gradient(60% 60% at 72% 38%, #000 0%, transparent 75%);
+}
+
+@media (max-width: 1023px) {
+  .hero-sunburst {
+    background-image:
+      repeating-conic-gradient(
+        from 0deg at 50% 30%,
+        rgba(255, 255, 255, 0.06) 0deg 4deg,
+        rgba(255, 255, 255, 0) 4deg 12deg
+      ),
+      radial-gradient(55% 40% at 50% 30%, rgba(56, 189, 248, 0.25) 0%, rgba(56, 189, 248, 0) 70%);
+    -webkit-mask-image: radial-gradient(70% 50% at 50% 30%, #000 0%, transparent 80%);
+    mask-image: radial-gradient(70% 50% at 50% 30%, #000 0%, transparent 80%);
+  }
+}
+
 @keyframes water-shimmer {
   0%,
   100% {
