@@ -1,0 +1,60 @@
+import Link from "next/link";
+import { cn } from "@/lib/utils";
+
+type Variant = "primary" | "secondary" | "outline" | "contact";
+
+const variants: Record<Variant, string> = {
+  primary:
+    "bg-primary text-white shadow-sm shadow-cyan-900/10 hover:bg-[#08466f] disabled:shadow-none",
+  secondary: "bg-water text-white shadow-sm shadow-cyan-900/10 hover:bg-teal-brand disabled:shadow-none",
+  outline: "border border-primary/25 bg-white text-primary hover:border-primary hover:bg-aqua/45",
+  contact: "border border-primary/25 bg-white text-primary hover:border-primary hover:bg-aqua/45"
+};
+
+type BaseProps = {
+  variant?: Variant;
+  className?: string;
+  children: React.ReactNode;
+};
+
+export function CustomerButton({
+  variant = "primary",
+  className,
+  children,
+  ...props
+}: BaseProps & React.ButtonHTMLAttributes<HTMLButtonElement>) {
+  return (
+    <button
+      className={cn(
+        "focus-ring inline-flex h-12 items-center justify-center gap-2 rounded-2xl px-6 text-sm font-bold transition disabled:cursor-not-allowed disabled:opacity-55",
+        variants[variant],
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </button>
+  );
+}
+
+export function CustomerButtonLink({
+  href,
+  variant = "primary",
+  className,
+  children,
+  ...props
+}: BaseProps & React.ComponentProps<typeof Link>) {
+  return (
+    <Link
+      href={href}
+      className={cn(
+        "focus-ring inline-flex h-12 items-center justify-center gap-2 rounded-2xl px-6 text-sm font-bold transition",
+        variants[variant],
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </Link>
+  );
+}

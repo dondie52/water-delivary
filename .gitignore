@@ -1,0 +1,14 @@
+node_modules/
+.next/
+out/
+dist/
+*.log
+*.tsbuildinfo
+.env
+.env.local
+.env.*.local
+.tmp-uipro/
+
+# Local installers in pictures/ — not app assets
+pictures/*.exe
+pictures/*.msi
