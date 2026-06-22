@@ -7,6 +7,7 @@ import { StatusPill } from "@/components/ui/status-pill";
 import { formatCurrency } from "@/lib/utils";
 import { downloadCsv } from "@/lib/csv";
 import { CustomerOrder, orderStatuses } from "@/modules/orders/customer-order";
+import { AdminStatsSkeleton } from "@/components/skeletons/admin-skeletons";
 
 export function ReportsDashboard() {
   const [orders, setOrders] = useState<CustomerOrder[]>([]);
@@ -121,7 +122,7 @@ export function ReportsDashboard() {
         </div>
       </header>
       <section className="mx-auto max-w-7xl px-4 py-5 sm:px-6 lg:px-8">
-        {isLoading ? <p className="rounded-lg border bg-white p-5 text-sm font-semibold text-slate-600">Loading reports...</p> : null}
+        {isLoading ? <AdminStatsSkeleton count={6} /> : null}
         {error ? <p className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm font-semibold text-red-700">{error}</p> : null}
         {!isLoading && !error ? (
           <div className="grid gap-5">

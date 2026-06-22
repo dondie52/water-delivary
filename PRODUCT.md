@@ -17,7 +17,9 @@ Each surface shares one brand, but the default design register is **product**: d
 
 ## Product Purpose
 
-Fresh Water Market OS is the operating system for bottled water retail, refill operations, branded bottle production, and delivery logistics across Botswana. It unifies customer ordering, commerce, fulfillment, inventory, CRM, corporate accounts, and analytics in one modular platform — built for pilot operations now and multi-branch expansion later.
+Fresh Water Market OS is the operating system for bottled water retail, refill operations, branded bottle production, and delivery logistics across Botswana. It unifies customer ordering, commerce, fulfillment, inventory, CRM, corporate accounts, and analytics in one modular platform.
+
+**Current phase: pilot operations** — single-branch Gaborone focus, real fulfillment, and a codebase built to scale to multi-branch expansion later without redesigning the core workflows.
 
 Success looks like: customers order with confidence, staff move orders without friction, and the brand feels premium and local — never like a generic SaaS template.
 
@@ -40,6 +42,7 @@ Understated confidence. Clean hydration. The interface should feel as considered
 3. **Local premium, not startup generic** — Feel like a Botswana water brand with real fulfillment behind it, not a YC demo day product.
 4. **Mobile reality** — Drivers and customers live on phones; touch targets, one-handed flows, and reduced-motion respect field conditions.
 5. **Show competence in fulfillment** — Surface order status, delivery windows, and inventory truthfully. Trust is built by what the system proves, not what the hero section claims.
+6. **Perceived performance** — Use skeleton loading states on route transitions; never gate content behind entrance animations that may not fire.
 
 ## Accessibility & Inclusion
 

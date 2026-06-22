@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { StatusPill } from "@/components/ui/status-pill";
 import { downloadCsv } from "@/lib/csv";
 import { InventoryItem, InventoryItemInput, inventoryCategories } from "@/modules/inventory/inventory";
+import { AdminTableSkeleton } from "@/components/skeletons/admin-skeletons";
 
 const inputClass = "h-10 w-full rounded-md border bg-white px-3 text-sm focus-ring";
 
@@ -126,7 +127,7 @@ export function InventoryDashboard() {
 
           <section className="overflow-hidden rounded-lg border bg-white shadow-sm">
             <div className="border-b bg-slate-100 px-4 py-3 text-sm font-bold text-slate-700">Inventory items</div>
-            {isLoading ? <p className="p-5 text-sm font-semibold text-slate-600">Loading inventory...</p> : items.length === 0 ? <p className="p-5 text-sm text-slate-600">No inventory items yet.</p> : (
+            {isLoading ? <AdminTableSkeleton rows={6} columns={4} showHeader={false} /> : items.length === 0 ? <p className="p-5 text-sm text-slate-600">No inventory items yet.</p> : (
               <div className="divide-y">
                 {items.map((item) => (
                   <article key={item.id} className="grid gap-3 px-4 py-4 md:grid-cols-[1fr_140px_140px_90px] md:items-center">

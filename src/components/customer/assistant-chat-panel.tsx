@@ -134,11 +134,7 @@ export function AssistantChatPanel({
               </span>
             </div>
             <p className="text-xs text-primary/70">
-              {aiSource === "gemini"
-                ? "Powered by Google Gemini"
-                : aiSource === "rules"
-                  ? "Quick answers (add Gemini key for full AI)"
-                  : "Prices, pickup, delivery & orders"}
+              {aiSource === "gemini" ? "Powered by Google Gemini" : "Prices, pickup, delivery & orders"}
             </p>
           </div>
         </div>

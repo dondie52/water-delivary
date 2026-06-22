@@ -14,19 +14,7 @@ import {
 } from "@/lib/orders/order-wizard";
 import { formatCurrency } from "@/lib/utils";
 import { QuantityStepper, SelectableTile } from "@/components/order/wizard/quantity-stepper";
-
-function ProductSkeleton() {
-  return (
-    <div className="grid gap-3 sm:grid-cols-2">
-      {Array.from({ length: 4 }).map((_, index) => (
-        <div key={index} className="animate-pulse rounded-2xl border border-cyan-100 bg-aqua/30 p-4">
-          <div className="h-5 w-3/4 rounded bg-cyan-100" />
-          <div className="mt-2 h-4 w-1/3 rounded bg-cyan-100" />
-        </div>
-      ))}
-    </div>
-  );
-}
+import { WizardProductGridSkeleton } from "@/components/skeletons/customer-skeletons";
 
 export function StepProduct({
   service,
@@ -69,7 +57,7 @@ export function StepProduct({
   }, [artworkPreview]);
 
   if (catalogLoading && service !== "refill") {
-    return <ProductSkeleton />;
+    return <WizardProductGridSkeleton />;
   }
 
   const products = getProductsForService(service, catalog);
@@ -154,7 +142,7 @@ export function StepProduct({
   }
 
   if (products.length === 0) {
-    return <ProductSkeleton />;
+    return <WizardProductGridSkeleton />;
   }
 
   return (

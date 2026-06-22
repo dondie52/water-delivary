@@ -20,6 +20,7 @@ import { CustomerButton, CustomerButtonLink } from "@/components/customer/custom
 import { useCustomerAuth } from "@/components/customer/customer-auth-provider";
 import { StatusPill } from "@/components/ui/status-pill";
 import { formatCurrency } from "@/lib/utils";
+import { AccountLookupSkeleton, AccountPageSkeleton } from "@/components/skeletons/customer-skeletons";
 import { formatOrderLineItem, type CustomerOrder } from "@/modules/orders/customer-order";
 
 type AccountLookup = {
@@ -37,30 +38,6 @@ function profileInitials(name: string) {
     return parts[0].slice(0, 2).toUpperCase();
   }
   return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
-}
-
-function AccountPageSkeleton() {
-  return (
-    <div className="mt-6 space-y-4" aria-hidden="true">
-      <div className="customer-card animate-pulse space-y-4 p-6 sm:p-8">
-        <div className="flex gap-4">
-          <div className="h-14 w-14 rounded-2xl bg-muted" />
-          <div className="flex-1 space-y-2">
-            <div className="h-3 w-24 rounded-lg bg-muted" />
-            <div className="h-6 w-40 rounded-lg bg-muted" />
-            <div className="h-4 w-52 rounded-lg bg-muted" />
-            <div className="h-4 w-36 rounded-lg bg-muted" />
-          </div>
-        </div>
-      </div>
-      <div className="customer-card animate-pulse space-y-3 p-6">
-        <div className="h-4 w-28 rounded-lg bg-muted" />
-        <div className="h-12 rounded-2xl bg-muted" />
-        <div className="h-12 rounded-2xl bg-muted" />
-        <div className="h-12 rounded-2xl bg-muted" />
-      </div>
-    </div>
-  );
 }
 
 export default function AccountPage() {
@@ -171,11 +148,7 @@ export default function AccountPage() {
               </div>
 
               {lookupLoading ? (
-                <div className="customer-card animate-pulse space-y-3 p-5" aria-hidden="true">
-                  <div className="h-4 w-28 rounded-lg bg-muted" />
-                  <div className="h-5 w-full rounded-lg bg-muted" />
-                  <div className="h-10 rounded-2xl bg-muted" />
-                </div>
+                <AccountLookupSkeleton />
               ) : lastOrder ? (
                 <article className="customer-card border-primary/15 bg-aqua/25 p-5 sm:p-6">
                   <div className="flex items-start justify-between gap-3">

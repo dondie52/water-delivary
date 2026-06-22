@@ -14,8 +14,10 @@ const config: Config = {
         foreground: "hsl(var(--foreground))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))"
+          foreground: "hsl(var(--primary-foreground))",
+          hover: "hsl(var(--primary-hover))"
         },
+        ink: "hsl(var(--ink))",
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))"

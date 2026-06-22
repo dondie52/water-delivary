@@ -10,32 +10,7 @@ import { CartLineList } from "@/components/cart/cart-line-list";
 import { useCart } from "@/components/cart/cart-provider";
 import { useCustomerAuth } from "@/components/customer/customer-auth-provider";
 import { formatCurrency } from "@/lib/utils";
-
-function CartPageSkeleton() {
-  return (
-    <div className="mt-6 space-y-4" aria-hidden="true">
-      <div className="customer-card animate-pulse divide-y divide-cyan-100 p-0">
-        {[0, 1].map((key) => (
-          <div key={key} className="flex gap-4 p-5">
-            <div className="h-20 w-20 shrink-0 rounded-xl bg-muted" />
-            <div className="flex-1 space-y-2">
-              <div className="h-5 w-40 rounded-lg bg-muted" />
-              <div className="h-4 w-24 rounded-lg bg-muted" />
-              <div className="h-4 w-16 rounded-lg bg-muted" />
-            </div>
-          </div>
-        ))}
-      </div>
-      <div className="customer-card animate-pulse space-y-3 p-5">
-        <div className="flex justify-between">
-          <div className="h-4 w-20 rounded-lg bg-muted" />
-          <div className="h-4 w-16 rounded-lg bg-muted" />
-        </div>
-        <div className="h-12 rounded-2xl bg-muted" />
-      </div>
-    </div>
-  );
-}
+import { CartPageSkeleton } from "@/components/skeletons/customer-skeletons";
 
 export default function CartPage() {
   const router = useRouter();
@@ -68,7 +43,7 @@ export default function CartPage() {
               ? "Loading your items…"
               : hasItems
                 ? `${itemCount} ${itemCount === 1 ? "item" : "items"} ready for checkout.`
-                : "Review your items before checkout."}
+                : "No items yet — add products from the order page."}
           </p>
 
           <div className="mt-6">

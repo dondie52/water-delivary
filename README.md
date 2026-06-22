@@ -17,7 +17,9 @@ npm install
 npm run dev
 ```
 
-Copy `.env.example` to `.env.local` and provide Supabase keys before enabling live auth and data writes.
+Copy `.env.local.example` to `.env.local` and provide Supabase keys before enabling live auth and data writes.
+
+Deploy the Next.js app on [Vercel](https://vercel.com) (import the GitHub repo). Add the same env vars in Vercel → Project → Settings → Environment Variables. Supabase stays the backend (database, auth, storage).
 
 ## Architecture
 

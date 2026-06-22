@@ -4,10 +4,11 @@ import { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { UserRoundCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { AdminCompactAuthSkeleton } from "@/components/skeletons/admin-skeletons";
 
 export default function StaffLoginPage() {
   return (
-    <Suspense fallback={<main className="water-canvas grid min-h-screen place-items-center px-4 text-sm font-semibold text-slate-600">Loading staff login...</main>}>
+    <Suspense fallback={<AdminCompactAuthSkeleton />}>
       <StaffLoginForm />
     </Suspense>
   );

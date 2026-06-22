@@ -5,6 +5,7 @@ import { AdminNav } from "@/components/layout/admin-nav";
 import { Button } from "@/components/ui/button";
 import { CustomerOrder } from "@/modules/orders/customer-order";
 import { formatCurrency } from "@/lib/utils";
+import { AdminCustomerDetailSkeleton } from "@/components/skeletons/admin-skeletons";
 
 export function CustomerDetail({ phone }: { phone: string }) {
   const [orders, setOrders] = useState<CustomerOrder[]>([]);
@@ -13,9 +14,12 @@ export function CustomerDetail({ phone }: { phone: string }) {
   const [notes, setNotes] = useState<Array<{ id: string; note: string; staff_name?: string; created_at: string }>>([]);
   const [points, setPoints] = useState<Array<{ phoneNumber?: string; phone_number?: string; points: number; referralCount?: number; referral_count?: number }>>([]);
   const [note, setNote] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   const load = useCallback(async function load() {
-    const [ordersResponse, feedbackResponse, subscriptionsResponse, notesResponse, pointsResponse] = await Promise.all([
+    setIsLoading(true);
+    try {
+      const [ordersResponse, feedbackResponse, subscriptionsResponse, notesResponse, pointsResponse] = await Promise.all([
       fetch(`/api/v1/customer-orders?phone=${encodeURIComponent(phone)}`, { cache: "no-store" }),
       fetch("/api/v1/feedback", { cache: "no-store" }),
       fetch("/api/v1/subscriptions", { cache: "no-store" }),
@@ -31,6 +35,9 @@ export function CustomerDetail({ phone }: { phone: string }) {
     if (subscriptionsResponse.ok) setSubscriptions((await subscriptionsResponse.json()).data.filter((item: { phone: string }) => item.phone === phone));
     if (notesResponse.ok) setNotes((await notesResponse.json()).data);
     if (pointsResponse.ok) setPoints((await pointsResponse.json()).data.filter((item: { phoneNumber?: string; phone_number?: string }) => (item.phoneNumber ?? item.phone_number) === phone));
+    } finally {
+      setIsLoading(false);
+    }
   }, [phone]);
 
   async function saveNote() {
@@ -46,6 +53,9 @@ export function CustomerDetail({ phone }: { phone: string }) {
       <AdminNav />
       <section className="mx-auto max-w-5xl px-4 py-5 sm:px-6 lg:px-8">
         <h1 className="text-2xl font-bold">Customer {phone}</h1>
+        {isLoading ? (
+          <AdminCustomerDetailSkeleton />
+        ) : (
         <div className="mt-5 grid gap-5 lg:grid-cols-2">
           <Card title="Order history">{orders.map((order) => <p key={order.id} className="text-sm">{order.orderNumber} - {formatCurrency(order.total)} - {order.status}</p>)}</Card>
           <Card title="Feedback">{feedback.length === 0 ? <p className="text-sm">No feedback.</p> : feedback.map((item) => <p key={item.order_number} className="text-sm">{item.order_number}: {item.rating}/5 {item.comment}</p>)}</Card>
@@ -57,6 +67,7 @@ export function CustomerDetail({ phone }: { phone: string }) {
             <div className="mt-3 space-y-2">{notes.map((item) => <p key={item.id} className="text-sm">{item.note} <span className="text-slate-500">{item.staff_name}</span></p>)}</div>
           </Card>
         </div>
+        )}
       </section>
     </main>
   );

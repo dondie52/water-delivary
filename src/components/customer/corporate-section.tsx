@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { BrandImage } from "@/components/customer/brand-image";
+import { CustomerButtonLink } from "@/components/customer/customer-button";
 import { BRAND_ASSETS } from "@/lib/brand-assets";
 
 const useCases = ["Events", "Corporates", "Weddings", "Sports teams", "Student orgs"];
@@ -19,7 +19,7 @@ export function CorporateSection() {
               height={480}
               sizes="(min-width: 1024px) 480px, 100vw"
             />
-            <span className="absolute -bottom-3 left-4 rounded-xl bg-secondary px-3 py-1.5 text-sm font-black text-[#061a4f] shadow-sm shadow-cyan-900/10">
+            <span className="absolute -bottom-3 left-4 rounded-xl bg-secondary px-3 py-1.5 text-sm font-black text-[#061a4f]">
               Your logo, our water
             </span>
           </div>
@@ -42,18 +42,10 @@ export function CorporateSection() {
               ))}
             </div>
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-              <Link
-                href="/corporate"
-                className="focus-ring inline-flex h-12 items-center justify-center rounded-2xl bg-primary px-7 text-base font-bold text-white shadow-sm shadow-cyan-900/10 transition-colors hover:bg-[#08466f]"
-              >
-                Request a quote
-              </Link>
-              <Link
-                href="/order?service=personalized"
-                className="focus-ring inline-flex h-12 items-center justify-center rounded-2xl border border-primary/25 bg-white px-7 text-base font-bold text-primary transition-colors hover:border-primary hover:bg-aqua/45"
-              >
+              <CustomerButtonLink href="/corporate">Request a quote</CustomerButtonLink>
+              <CustomerButtonLink href="/order?service=personalized" variant="outline">
                 Order branded bottles
-              </Link>
+              </CustomerButtonLink>
             </div>
           </div>
         </div>

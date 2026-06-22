@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { AdminNav } from "@/components/layout/admin-nav";
 import { StatusPill } from "@/components/ui/status-pill";
+import { AdminStatsSkeleton } from "@/components/skeletons/admin-skeletons";
 
 type Readiness = { env: Record<string, boolean>; supabaseConnected: boolean; migrationCheck: string; seed: Record<string, number> };
 
@@ -14,7 +15,7 @@ export function DeploymentDashboard() {
       <AdminNav />
       <section className="mx-auto max-w-4xl px-4 py-5 sm:px-6 lg:px-8">
         <h1 className="text-2xl font-bold">Deployment readiness</h1>
-        {!readiness ? <p className="mt-4 text-sm">Loading...</p> : (
+        {!readiness ? <AdminStatsSkeleton count={3} /> : (
           <div className="mt-5 grid gap-5">
             <Card title="Environment variables">{Object.entries(readiness.env).map(([key, ok]) => <Row key={key} label={key} ok={ok} />)}</Card>
             <Card title="Supabase and seed data">

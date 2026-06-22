@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { formatCurrency } from "@/lib/utils";
 import { downloadCsv } from "@/lib/csv";
 import { CustomerOrder, deliverySlots } from "@/modules/orders/customer-order";
+import { AdminListSkeleton } from "@/components/skeletons/admin-skeletons";
 
 const inputClass = "h-10 rounded-md border bg-white px-3 text-sm focus-ring";
 
@@ -79,7 +80,7 @@ export function DeliveryManifest() {
           </Button>
         </div>
 
-        {isLoading ? <p className="rounded-lg border bg-white p-5 text-sm font-semibold text-slate-600">Loading manifest...</p> : null}
+        {isLoading ? <AdminListSkeleton rows={6} /> : null}
         {error ? <p className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm font-semibold text-red-700">{error}</p> : null}
         {!isLoading && manifestOrders.length === 0 ? <p className="rounded-lg border bg-white p-5 text-sm text-slate-600">No delivery orders match this manifest.</p> : null}
 

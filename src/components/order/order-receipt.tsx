@@ -7,10 +7,12 @@ import { CustomerShell } from "@/components/customer/customer-shell";
 import { CustomerButtonLink } from "@/components/customer/customer-button";
 import { BrandImage } from "@/components/customer/brand-image";
 import { BRAND_ASSETS } from "@/lib/brand-assets";
+import { OrderStatusStepper } from "@/components/order/order-status-stepper";
 import { StatusPill } from "@/components/ui/status-pill";
 import { formatCurrency } from "@/lib/utils";
 import { buildInvoiceSummary, buildWhatsappTemplate, CustomerOrder, OrderStatusEvent, whatsappTemplateTypes } from "@/modules/orders/customer-order";
 import { cn } from "@/lib/utils";
+import { ReceiptSkeleton } from "@/components/skeletons/customer-skeletons";
 
 export function OrderReceipt({ orderNumber }: { orderNumber: string }) {
   const [order, setOrder] = useState<CustomerOrder | null>(null);
@@ -45,16 +47,7 @@ export function OrderReceipt({ orderNumber }: { orderNumber: string }) {
   }, [orderNumber]);
 
   if (isLoading) {
-    return (
-      <CustomerShell>
-        <main className="bg-gradient-to-b from-cyan-50/40 to-white pb-16">
-          <section className="customer-section max-w-lg animate-pulse space-y-4">
-            <div className="customer-card h-32" />
-            <div className="customer-card h-48" />
-          </section>
-        </main>
-      </CustomerShell>
-    );
+    return <ReceiptSkeleton />;
   }
 
   if (error || !order) {
@@ -97,6 +90,9 @@ export function OrderReceipt({ orderNumber }: { orderNumber: string }) {
             <h1 className="mt-4 text-2xl font-black text-slate-950">Thank you!</h1>
             <p className="mt-2 text-sm text-slate-600">Your Fresh Water Market order is on its way.</p>
             <p className="mt-4 text-lg font-bold text-primary">{order.orderNumber}</p>
+            <div className="mt-5">
+              <OrderStatusStepper status={order.status} />
+            </div>
             <div className="mt-4 flex flex-wrap justify-center gap-2">
               <StatusPill tone={order.status === "completed" ? "good" : order.status === "cancelled" ? "critical" : "warn"}>
                 {order.status.replaceAll("_", " ")}

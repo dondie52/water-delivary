@@ -8,6 +8,7 @@ import { AdminNav } from "@/components/layout/admin-nav";
 import { formatCurrency } from "@/lib/utils";
 import { CustomerOrder } from "@/modules/orders/customer-order";
 import { summarizeDailyOperations } from "@/modules/orders/operations";
+import { AdminStatsSkeleton } from "@/components/skeletons/admin-skeletons";
 
 export function OperationsDashboardV2() {
   const [orders, setOrders] = useState<CustomerOrder[]>([]);
@@ -51,7 +52,7 @@ export function OperationsDashboardV2() {
       </header>
 
       <section className="mx-auto max-w-7xl px-4 py-5 sm:px-6 lg:px-8">
-        {isLoading ? <p className="rounded-lg border bg-white p-5 text-sm font-semibold text-slate-600">Loading operations...</p> : null}
+        {isLoading ? <AdminStatsSkeleton /> : null}
         {error ? <p className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm font-semibold text-red-700">{error}</p> : null}
 
         {!isLoading && !error ? (

@@ -20,6 +20,7 @@ import { CustomerButton } from "@/components/customer/customer-button";
 import { useCustomerAuth } from "@/components/customer/customer-auth-provider";
 import { useCart } from "@/components/cart/cart-provider";
 import { QuantityStepper } from "@/components/order/wizard/quantity-stepper";
+import { ProductRowSkeleton } from "@/components/skeletons/customer-skeletons";
 
 export type ProductFilter = "all" | ServiceType;
 
@@ -69,20 +70,6 @@ function buildVisibleProducts(filter: ProductFilter, catalog: PriceItem[]): Arra
   }
 
   return rows;
-}
-
-function ProductRowSkeleton() {
-  return (
-    <div className="animate-pulse border-b border-slate-100 py-4">
-      <div className="flex gap-4">
-        <div className="h-20 w-20 rounded-xl bg-slate-100" />
-        <div className="flex-1 space-y-2">
-          <div className="h-4 w-3/4 rounded bg-slate-100" />
-          <div className="h-3 w-1/3 rounded bg-slate-100" />
-        </div>
-      </div>
-    </div>
-  );
 }
 
 const addButtonClass =

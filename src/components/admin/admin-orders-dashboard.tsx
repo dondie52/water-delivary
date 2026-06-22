@@ -9,6 +9,7 @@ import { AdminNav } from "@/components/layout/admin-nav";
 import { formatCurrency } from "@/lib/utils";
 import { downloadCsv } from "@/lib/csv";
 import { CustomerOrder, CustomerOrderStatus, CustomerPaymentStatus, orderStatuses, paymentStatuses } from "@/modules/orders/customer-order";
+import { AdminTableSkeleton } from "@/components/skeletons/admin-skeletons";
 
 const inputClass = "h-10 rounded-md border bg-white px-3 text-sm focus-ring";
 
@@ -166,7 +167,7 @@ export function AdminOrdersDashboard() {
           </div>
 
           {isLoading ? (
-            <div className="p-6 text-sm font-semibold text-slate-600">Loading orders...</div>
+            <AdminTableSkeleton rows={8} columns={6} />
           ) : filteredOrders.length === 0 ? (
             <div className="p-6 text-sm font-semibold text-slate-600">No submitted orders found.</div>
           ) : (

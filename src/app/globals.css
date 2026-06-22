@@ -5,6 +5,8 @@
 :root {
   --background: 196 60% 96%;
   --foreground: 211 45% 13%;
+  --ink: 220 24% 14%;
+  --primary-hover: 205 85% 24%;
   --card: 195 50% 99%;
   --card-foreground: 211 45% 13%;
   --primary: 205 85% 28%;

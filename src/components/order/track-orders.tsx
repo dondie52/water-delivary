@@ -5,6 +5,8 @@ import Link from "next/link";
 import { Loader2, PackageSearch } from "lucide-react";
 import { CustomerShell } from "@/components/customer/customer-shell";
 import { CustomerButton, CustomerButtonLink } from "@/components/customer/customer-button";
+import { TrackResultSkeleton } from "@/components/skeletons/customer-skeletons";
+import { OrderStatusStepper } from "@/components/order/order-status-stepper";
 import { StatusPill } from "@/components/ui/status-pill";
 
 type TrackedOrder = {
@@ -53,10 +55,10 @@ export function TrackOrders() {
           <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary shadow-sm">
             <PackageSearch className="h-7 w-7" />
           </div>
-          <h1 className="mt-5 text-3xl font-black tracking-tight text-slate-950">Track your order</h1>
-          <p className="mt-2 text-sm leading-6 text-slate-600">Enter your phone number or order number (FWM-…).</p>
+          <h1 className="mt-5 text-3xl font-black tracking-tight text-foreground">Track your order</h1>
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">Enter your phone number or order number (FWM-…).</p>
 
-          <form className="customer-card mt-6 space-y-3 shadow-md" onSubmit={search}>
+          <form className="customer-card mt-6 space-y-3" onSubmit={search}>
             <input
               className={inputClass}
               value={query}
@@ -81,26 +83,19 @@ export function TrackOrders() {
           ) : null}
 
           {isLoading ? (
-            <div className="mt-6 grid gap-4">
-              {[0, 1].map((key) => (
-                <div key={key} className="customer-card animate-pulse space-y-3">
-                  <div className="h-5 w-40 rounded-lg bg-slate-100" />
-                  <div className="h-4 w-24 rounded-lg bg-slate-100" />
-                  <div className="h-10 w-full rounded-xl bg-slate-100" />
-                </div>
-              ))}
-            </div>
+            <TrackResultSkeleton />
           ) : (
             <div className="mt-6 grid gap-4">
               {orders.map((order) => (
-                <article key={order.orderNumber} className="customer-card shadow-md transition hover:shadow-lg">
-                  <h2 className="text-lg font-bold text-slate-950">{order.orderNumber}</h2>
-                  <div className="mt-3 flex flex-wrap gap-2">
+                <article key={order.orderNumber} className="customer-card transition hover:shadow-md">
+                  <h2 className="text-lg font-bold text-foreground">{order.orderNumber}</h2>
+                  <OrderStatusStepper status={order.status} className="mt-4" compact />
+                  <div className="mt-4 flex flex-wrap gap-2">
                     <StatusPill>{order.status.replaceAll("_", " ")}</StatusPill>
                     <StatusPill tone={order.paymentStatus === "paid" ? "good" : "warn"}>{order.paymentStatus}</StatusPill>
                   </div>
-                  <p className="mt-3 text-sm text-slate-600">Fulfillment: {order.fulfillmentDate}</p>
-                  {order.slot ? <p className="text-sm text-slate-600">Slot: {order.slot}</p> : null}
+                  <p className="mt-3 text-sm text-muted-foreground">Fulfillment: {order.fulfillmentDate}</p>
+                  {order.slot ? <p className="text-sm text-muted-foreground">Slot: {order.slot}</p> : null}
                   <CustomerButtonLink href={`/order/${order.orderNumber}`} className="mt-4 w-full" variant="outline">
                     View receipt
                   </CustomerButtonLink>
@@ -116,13 +111,9 @@ export function TrackOrders() {
             </div>
           )}
 
-          <p className="mt-8 text-center text-sm text-slate-500">
+          <p className="mt-8 text-center text-sm text-muted-foreground">
             <Link href="/order" className="font-semibold text-primary hover:underline">
               Place a new order
-            </Link>
-            {" · "}
-            <Link href="/assistant" className="font-semibold text-primary hover:underline">
-              Ask the assistant
             </Link>
           </p>
         </section>

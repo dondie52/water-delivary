@@ -9,7 +9,6 @@ import { QuickOrderCards } from "@/components/customer/quick-order-cards";
 import { WinterHydrationSection } from "@/components/customer/winter-hydration-section";
 import { PricingSection, type PopularPrice } from "@/components/customer/pricing-section";
 import { PickupDeliverySection } from "@/components/customer/pickup-delivery-section";
-import { DeliveryDemoSection } from "@/components/customer/delivery-demo-section";
 import { LowerLandingSections } from "@/components/customer/lower-landing-sections";
 import { CorporateSection } from "@/components/customer/corporate-section";
 import { FinalCtaSection } from "@/components/customer/final-cta-section";
@@ -63,7 +62,6 @@ export default async function Home() {
           deliverySlots={deliverySlots.map((slot) => slot.label)}
           deliveryFee={settings.studentDeliveryFee}
         />
-        <DeliveryDemoSection />
         <LowerLandingSections />
         <CorporateSection />
         <FinalCtaSection whatsappNumber={settings.whatsappNumber} />

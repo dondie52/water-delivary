@@ -5,18 +5,25 @@ import { useEffect, useMemo, useState } from "react";
 import { AdminNav } from "@/components/layout/admin-nav";
 import { formatCurrency } from "@/lib/utils";
 import { CustomerOrder } from "@/modules/orders/customer-order";
+import { AdminListSkeleton } from "@/components/skeletons/admin-skeletons";
 
 export function CustomersDashboard() {
   const [orders, setOrders] = useState<CustomerOrder[]>([]);
   const [points, setPoints] = useState<Array<{ phone_number: string; points: number }>>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function load() {
-      const ordersResponse = await fetch("/api/v1/customer-orders", { cache: "no-store" });
-      const ordersPayload = await ordersResponse.json();
-      if (ordersResponse.ok) setOrders(ordersPayload.data);
-      const pointsResponse = await fetch("/api/v1/customer-points", { cache: "no-store" });
-      if (pointsResponse.ok) setPoints((await pointsResponse.json()).data);
+      setIsLoading(true);
+      try {
+        const ordersResponse = await fetch("/api/v1/customer-orders", { cache: "no-store" });
+        const ordersPayload = await ordersResponse.json();
+        if (ordersResponse.ok) setOrders(ordersPayload.data);
+        const pointsResponse = await fetch("/api/v1/customer-points", { cache: "no-store" });
+        if (pointsResponse.ok) setPoints((await pointsResponse.json()).data);
+      } finally {
+        setIsLoading(false);
+      }
     }
     load();
   }, []);
@@ -39,15 +46,21 @@ export function CustomersDashboard() {
       <AdminNav />
       <section className="mx-auto max-w-7xl px-4 py-5 sm:px-6 lg:px-8">
         <h1 className="text-2xl font-bold text-slate-950">Customers</h1>
-        <div className="mt-5 divide-y rounded-lg border bg-white shadow-sm">
-          {customers.map((customer) => (
-            <Link key={customer.phone} href={`/admin/customers/${customer.phone}`} className="grid gap-2 p-4 hover:bg-slate-50 md:grid-cols-[1fr_120px_140px_120px]">
-              <div><p className="font-bold">{customer.name}</p><p className="text-sm text-slate-600">{customer.phone}</p></div>
-              <p>{customer.totalOrders} orders</p>
-              <p>{formatCurrency(customer.totalSpent)}</p>
-              <p>{customer.points} pts</p>
-            </Link>
-          ))}
+        <div className="mt-5">
+          {isLoading ? (
+            <AdminListSkeleton rows={8} />
+          ) : (
+            <div className="divide-y rounded-lg border bg-white shadow-sm">
+              {customers.map((customer) => (
+                <Link key={customer.phone} href={`/admin/customers/${customer.phone}`} className="grid gap-2 p-4 hover:bg-slate-50 md:grid-cols-[1fr_120px_140px_120px]">
+                  <div><p className="font-bold">{customer.name}</p><p className="text-sm text-slate-600">{customer.phone}</p></div>
+                  <p>{customer.totalOrders} orders</p>
+                  <p>{formatCurrency(customer.totalSpent)}</p>
+                  <p>{customer.points} pts</p>
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
       </section>
     </main>

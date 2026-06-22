@@ -4,6 +4,7 @@ import {
   CheckCircle2,
   Droplets,
   MapPin,
+  MessageCircle,
   Package,
   Snowflake,
   Sparkles,
@@ -11,8 +12,9 @@ import {
   type LucideIcon
 } from "lucide-react";
 import { BrandImage } from "@/components/customer/brand-image";
+import { CustomerButtonLink, CustomerExternalLink } from "@/components/customer/customer-button";
 import { BRAND_ASSETS } from "@/lib/brand-assets";
-import { buildPhoneLink, FWM_WHATSAPP } from "@/lib/contact";
+import { buildWhatsAppLink, FWM_WHATSAPP } from "@/lib/contact";
 
 const trustPoints = [
   { icon: CheckCircle2, label: "Refills from P1.60/L" },
@@ -38,48 +40,40 @@ const categories: CategoryItem[] = [
 ];
 
 export function HeroSection({ whatsappNumber = FWM_WHATSAPP }: { whatsappNumber?: string }) {
-  const contactHref = buildPhoneLink(whatsappNumber);
+  const whatsappHref = buildWhatsAppLink(undefined, whatsappNumber);
 
   return (
-    <section id="hero" className="hero-navy relative overflow-hidden text-white">
-      <div className="hero-sunburst pointer-events-none absolute inset-0" aria-hidden="true" />
-
+    <section id="hero" className="relative overflow-hidden bg-background text-foreground">
       <div className="relative mx-auto grid max-w-6xl items-center gap-8 px-4 pb-8 pt-10 sm:px-6 sm:pb-10 sm:pt-12 lg:grid-cols-[1.05fr_0.95fr] lg:px-8 lg:pt-16">
         <div className="max-w-2xl">
-          <h1 className="text-5xl font-extrabold leading-[0.98] tracking-[-0.02em] sm:text-6xl lg:text-7xl">
-            Hydration,
-            <span className="block text-water">Delivered.</span>
+          <p className="text-sm font-semibold text-water">Stay Fresh. Stay Hydrated.</p>
+
+          <h1 className="mt-2 text-[clamp(2rem,5vw,3rem)] font-extrabold leading-[1.1] tracking-[-0.02em] text-foreground">
+            Fresh Water Delivered Across Campus &amp; Gaborone
           </h1>
 
-          <p className="mt-5 max-w-md text-base font-medium leading-7 text-cyan-50/90 sm:text-lg">
-            Fresh Water Market brings refills, bottled water, ice, and branded
-            bottles to campus and across Gaborone &mdash; pickup points or student
+          <p className="mt-5 max-w-md text-base font-medium leading-7 text-muted-foreground sm:text-lg">
+            Refills, bottled water, ice, and branded bottles &mdash; pickup points or student
             delivery from P30.
           </p>
 
           <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-            <Link
-              href="/order"
-              className="focus-ring inline-flex h-12 items-center justify-center rounded-full bg-white px-8 text-base font-extrabold text-[#061a4f] shadow-lg shadow-cyan-950/20 transition-colors hover:bg-cyan-50"
-            >
+            <CustomerButtonLink href="/order" className="px-8 text-base font-extrabold">
               Start Water Delivery
-            </Link>
-            <Link
-              href="#pricing"
-              className="focus-ring inline-flex h-12 items-center justify-center rounded-full border-2 border-white/70 bg-white/0 px-8 text-base font-extrabold text-white transition-colors hover:border-white hover:bg-white/10"
-            >
+            </CustomerButtonLink>
+            <CustomerButtonLink href="#pricing" variant="outline" className="px-8 text-base font-extrabold">
               Explore Water Services
-            </Link>
+            </CustomerButtonLink>
           </div>
 
-          <dl className="mt-7 flex flex-wrap items-center gap-2 text-sm font-semibold text-white">
+          <dl className="mt-7 flex flex-wrap items-center gap-2 text-sm font-semibold text-foreground">
             {trustPoints.map((point) => {
               const Icon = point.icon;
 
               return (
                 <div
                   key={point.label}
-                  className="flex items-center gap-2 rounded-full bg-white/10 px-3 py-2 ring-1 ring-white/20 backdrop-blur-sm"
+                  className="flex items-center gap-2 rounded-full bg-aqua px-3 py-2 ring-1 ring-cyan-100"
                 >
                   <Icon className="h-4 w-4 text-water" />
                   {point.label}
@@ -88,17 +82,19 @@ export function HeroSection({ whatsappNumber = FWM_WHATSAPP }: { whatsappNumber?
             })}
           </dl>
 
-          <a
-            href={contactHref}
-            className="focus-ring mt-4 inline-flex items-center gap-2 rounded-full px-3 py-2 text-sm font-bold text-cyan-50 transition-colors hover:bg-white/10 hover:text-white"
+          <CustomerExternalLink
+            href={whatsappHref}
+            variant="whatsapp"
+            className="mt-4 h-10 px-4 text-sm"
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            <CheckCircle2 className="h-4 w-4 text-water" />
-            Contact us for help
-          </a>
+            <MessageCircle className="h-4 w-4" />
+            Chat on WhatsApp
+          </CustomerExternalLink>
         </div>
 
         <div className="relative">
-          <div className="pointer-events-none absolute inset-0 -z-0 rounded-full bg-water/20 blur-3xl" aria-hidden="true" />
           <BrandImage
             src={BRAND_ASSETS.heroBanner}
             alt="Fresh Water Market bottled water, refills, and branded bottles"
@@ -114,9 +110,7 @@ export function HeroSection({ whatsappNumber = FWM_WHATSAPP }: { whatsappNumber?
       </div>
 
       <div className="relative mx-auto max-w-6xl px-4 pb-12 sm:px-6 lg:px-8">
-        <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-cyan-100/80">
-          What are you looking for?
-        </p>
+        <p className="text-sm font-bold text-foreground">What are you looking for?</p>
         <div className="mt-5 flex gap-5 overflow-x-auto pb-2 sm:flex-wrap sm:justify-start sm:overflow-visible">
           {categories.map((category) => {
             const Icon = category.icon;
@@ -127,7 +121,7 @@ export function HeroSection({ whatsappNumber = FWM_WHATSAPP }: { whatsappNumber?
                 href={category.href}
                 className="focus-ring group flex w-20 shrink-0 flex-col items-center gap-2 text-center"
               >
-                <span className="relative flex h-16 w-16 items-center justify-center overflow-hidden rounded-full bg-white/10 text-white ring-1 ring-white/25 backdrop-blur-sm transition duration-200 group-hover:ring-2 group-hover:ring-white group-hover:scale-105">
+                <span className="relative flex h-16 w-16 items-center justify-center overflow-hidden rounded-full bg-aqua text-primary ring-1 ring-cyan-100 transition duration-200 group-hover:ring-2 group-hover:ring-primary">
                   <Icon className="h-6 w-6" aria-hidden="true" />
                   <BrandImage
                     src={category.image}
@@ -140,26 +134,12 @@ export function HeroSection({ whatsappNumber = FWM_WHATSAPP }: { whatsappNumber?
                     sizes="64px"
                   />
                 </span>
-                <span className="text-[11px] font-bold leading-tight text-cyan-50">
-                  {category.label}
-                </span>
+                <span className="text-[11px] font-bold leading-tight text-foreground">{category.label}</span>
               </Link>
             );
           })}
         </div>
       </div>
-
-      <svg
-        className="relative block w-full text-white"
-        viewBox="0 0 1440 90"
-        preserveAspectRatio="none"
-        aria-hidden="true"
-      >
-        <path
-          fill="currentColor"
-          d="M0 60 C 240 90 480 90 720 60 C 960 30 1200 30 1440 60 L 1440 90 L 0 90 Z"
-        />
-      </svg>
     </section>
   );
 }

@@ -8,6 +8,7 @@ import { AdminNav } from "@/components/layout/admin-nav";
 import { StatusPill } from "@/components/ui/status-pill";
 import { formatCurrency } from "@/lib/utils";
 import { buildInvoiceSummary, CustomerOrder, CustomerOrderStatus, CustomerPaymentStatus, CustomerPaymentMethod, OrderStatusEvent, orderStatuses, paymentMethods, paymentStatuses, personalizedStages } from "@/modules/orders/customer-order";
+import { AdminOrderDetailSkeleton } from "@/components/skeletons/admin-skeletons";
 
 const inputClass = "h-10 w-full rounded-md border bg-white px-3 text-sm focus-ring";
 
@@ -83,7 +84,7 @@ export function AdminOrderDetail({ id }: { id: string }) {
   }, [id]);
 
   if (isLoading) {
-    return <main className="water-canvas grid min-h-screen place-items-center px-4 text-sm font-semibold text-slate-600">Loading order...</main>;
+    return <AdminOrderDetailSkeleton />;
   }
 
   if (error && !order) {

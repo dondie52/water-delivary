@@ -5,6 +5,7 @@ import { useState } from "react";
 import { AlertCircle, ArrowLeft, Eye, EyeOff, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CustomerShell } from "@/components/customer/customer-shell";
+import { AuthCardSkeleton } from "@/components/skeletons/customer-skeletons";
 import { cn } from "@/lib/utils";
 
 const inputBaseClassName =
@@ -30,19 +31,7 @@ export function CustomerAuthLayout({ children }: { children: React.ReactNode }) 
 }
 
 export function CustomerAuthCardSkeleton() {
-  return (
-    <div className="customer-card animate-pulse p-6 sm:p-8" aria-hidden="true">
-      <div className="h-4 w-28 rounded-lg bg-muted" />
-      <div className="mt-6 h-10 w-40 rounded-lg bg-muted" />
-      <div className="mt-5 h-7 w-32 rounded-lg bg-muted" />
-      <div className="mt-2 h-4 w-full max-w-xs rounded-lg bg-muted" />
-      <div className="mt-6 space-y-4">
-        <div className="h-12 rounded-2xl bg-muted" />
-        <div className="h-12 rounded-2xl bg-muted" />
-      </div>
-      <div className="mt-6 h-12 rounded-2xl bg-muted" />
-    </div>
-  );
+  return <AuthCardSkeleton />;
 }
 
 export function CustomerAuthCard({

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Droplets, Mail, MapPin, Package, Recycle, Sparkles, Truck } from "lucide-react";
+import { ArrowRight, Droplets, Package, Truck } from "lucide-react";
 import { BrandImage } from "@/components/customer/brand-image";
 import { CustomerTestimonialCarousel } from "@/components/customer/customer-testimonial-carousel";
 import { BRAND_ASSETS } from "@/lib/brand-assets";
@@ -44,10 +44,15 @@ const helpLinks = [
   }
 ];
 
+const communityProof = [
+  "Refill-first delivery across campus pickup points and student routes.",
+  "Gaborone-based support with clear pricing — reach us on WhatsApp anytime."
+];
+
 export function LowerLandingSections() {
   return (
     <>
-      <section className="bg-cyan-50 px-4 py-14 text-[#061a4f] sm:px-6 sm:py-16 lg:px-8">
+      <section className="bg-cyan-50 px-4 py-14 text-foreground sm:px-6 sm:py-16 lg:px-8">
         <div className="mx-auto max-w-5xl text-center">
           <BrandImage
             src={BRAND_ASSETS.logo}
@@ -59,54 +64,43 @@ export function LowerLandingSections() {
             height={120}
           />
           <h2 className="mx-auto mt-5 max-w-3xl text-2xl font-extrabold tracking-tight sm:text-3xl">
-            See Why Our Water Delivery Customers Love Us
+            Trusted on campus &amp; across Gaborone
           </h2>
           <CustomerTestimonialCarousel />
         </div>
       </section>
 
-      <section className="relative isolate overflow-hidden bg-white text-white">
-        <div className="absolute left-0 right-0 top-0 z-10 h-24 bg-white [clip-path:ellipse(74%_62%_at_50%_0%)]" aria-hidden="true" />
-        <BrandImage
-          src={BRAND_ASSETS.heroBanner}
-          alt="Fresh Water Market water supply for homes, campus, and events"
-          className="absolute inset-0 h-full w-full"
-          fallbackLabel="Fresh Water Market"
-          width={1400}
-          height={720}
-          sizes="100vw"
-        />
-        <div className="absolute inset-0 bg-[#061a4f]/72" aria-hidden="true" />
-        <div className="relative z-20 mx-auto max-w-6xl px-4 pb-16 pt-32 sm:px-6 lg:px-8">
-          <h2 className="text-center text-4xl font-extrabold tracking-tight text-aqua sm:text-5xl">
-            Hydrating a Healthy Gaborone
-          </h2>
-          <h3 className="mt-28 text-center text-2xl font-extrabold text-white">
-            Environmental and Community Responsibility
-          </h3>
-          <div className="mt-9 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              { icon: Recycle, value: "Refill-first", body: "Reusable containers reduce single-use plastic for everyday water." },
-              { icon: Truck, value: "Campus routes", body: "Delivery and pickup built around student schedules and locations." },
-              { icon: Sparkles, value: "Event ready", body: "Branded bottles support launches, weddings, sport days, and teams." },
-              { icon: MapPin, value: "Local service", body: "Gaborone-based support with clear pricing and simple ordering." }
-            ].map((item) => {
-              const Icon = item.icon;
-              return (
-                <article key={item.value} className="flex gap-3">
-                  <Icon className="mt-1 h-9 w-9 shrink-0 text-aqua" />
-                  <div>
-                    <p className="text-sm font-extrabold text-white">{item.value}</p>
-                    <p className="mt-1 text-sm leading-6 text-cyan-50">{item.body}</p>
-                  </div>
-                </article>
-              );
-            })}
+      <section className="bg-aqua/45 px-4 py-16 text-foreground sm:px-6 lg:px-8">
+        <div className="mx-auto grid max-w-6xl items-center gap-10 lg:grid-cols-2">
+          <div>
+            <h2 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
+              Hydrating a healthy Gaborone
+            </h2>
+            <p className="mt-4 text-base leading-7 text-primary/80">
+              Environmental and community responsibility built into how we deliver water.
+            </p>
+            <ul className="mt-6 space-y-3">
+              {communityProof.map((line) => (
+                <li key={line} className="flex gap-3 text-sm leading-6 text-foreground">
+                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-water" aria-hidden="true" />
+                  {line}
+                </li>
+              ))}
+            </ul>
           </div>
+          <BrandImage
+            src={BRAND_ASSETS.heroBanner}
+            alt="Fresh Water Market water supply for homes, campus, and events"
+            className="aspect-[4/3] w-full rounded-2xl object-cover"
+            fallbackLabel="Fresh Water Market"
+            width={1400}
+            height={720}
+            sizes="(min-width: 1024px) 520px, 100vw"
+          />
         </div>
       </section>
 
-      <section className="bg-cyan-50 px-4 py-16 text-[#061a4f] sm:px-6 lg:px-8">
+      <section className="bg-cyan-50 px-4 py-16 text-foreground sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl">
           <h2 className="text-center text-3xl font-extrabold tracking-tight">Frequently Asked Questions</h2>
           <div className="mt-10 divide-y divide-primary/25">
@@ -123,7 +117,7 @@ export function LowerLandingSections() {
         </div>
       </section>
 
-      <section className="bg-cyan-50 px-4 pb-16 pt-4 text-[#061a4f] sm:px-6 lg:px-8">
+      <section className="bg-cyan-50 px-4 pb-16 pt-4 text-foreground sm:px-6 lg:px-8">
         <div className="mx-auto max-w-5xl rounded-2xl bg-white p-6 shadow-sm shadow-cyan-900/10 sm:p-8">
           <h2 className="text-center text-2xl font-extrabold tracking-tight">What can we help you find today?</h2>
           <div className="mt-8 grid gap-6 md:grid-cols-3">
@@ -135,35 +129,15 @@ export function LowerLandingSections() {
                     <Icon className="h-6 w-6" />
                   </span>
                   <span>
-                    <span className="flex items-center gap-2 text-sm font-extrabold tracking-[0.18em] text-primary">
+                    <span className="flex items-center gap-2 text-sm font-extrabold text-primary">
                       {item.title}
                       <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
                     </span>
-                    <span className="mt-2 block text-sm leading-6 text-[#061a4f]">{item.body}</span>
+                    <span className="mt-2 block text-sm leading-6 text-foreground">{item.body}</span>
                   </span>
                 </Link>
               );
             })}
-          </div>
-          <div className="mt-9 flex flex-col gap-6 border-t border-cyan-100 pt-8 md:flex-row md:items-center md:justify-between">
-            <div className="flex items-center gap-4">
-              <Mail className="h-12 w-12 text-primary" />
-              <div>
-                <h3 className="text-2xl font-extrabold">Still thirsty? Stay in the know.</h3>
-                <p className="mt-1 text-sm text-primary/75">Get Fresh Water Market updates, refill reminders, and offers.</p>
-              </div>
-            </div>
-            <form className="flex w-full max-w-sm rounded-full border border-primary bg-white p-1" action="#" aria-label="Newsletter signup">
-              <input
-                type="email"
-                placeholder="Your email address"
-                className="min-w-0 flex-1 rounded-full px-4 text-sm outline-none placeholder:text-primary/70"
-                aria-label="Email address"
-              />
-              <button type="submit" className="focus-ring flex h-10 w-10 items-center justify-center rounded-full bg-primary text-white" aria-label="Submit email">
-                <ArrowRight className="h-4 w-4" />
-              </button>
-            </form>
           </div>
         </div>
       </section>

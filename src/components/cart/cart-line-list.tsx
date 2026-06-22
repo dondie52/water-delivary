@@ -1,10 +1,12 @@
 "use client";
 
+import Link from "next/link";
+import { ChevronRight } from "lucide-react";
 import { BrandImage } from "@/components/customer/brand-image";
 import { CustomerButtonLink } from "@/components/customer/customer-button";
 import { QuantityStepper } from "@/components/order/wizard/quantity-stepper";
-import { BRAND_ASSETS } from "@/lib/brand-assets";
 import { productImageForCartItem, SERVICE_LABELS } from "@/lib/catalog/product-image";
+import { SERVICE_CARDS } from "@/lib/orders/service-cards";
 import { formatCurrency } from "@/lib/utils";
 import type { CartItemRecord } from "@/modules/customer/profile";
 
@@ -39,30 +41,44 @@ export function CartLineList({
 }) {
   if (items.length === 0) {
     return (
-      <div className="customer-card overflow-hidden p-0 text-center">
-        <div className="relative aspect-[16/9] bg-aqua/40">
-          <BrandImage
-            src={BRAND_ASSETS.categories.bottled}
-            alt="Fresh Water Market products"
-            className="h-full w-full object-contain p-6"
-            fallbackLabel="Fresh Water Market"
-            width={480}
-            height={270}
-            sizes="(min-width: 640px) 640px, 100vw"
-            fit="contain"
-          />
+      <div className="customer-card p-6 sm:p-8">
+        <div className="text-center">
+          <p className="text-lg font-bold text-foreground">Your cart is empty</p>
+          <p className="mx-auto mt-2 max-w-[36ch] text-sm leading-6 text-muted-foreground">
+            Pick a service to add your first item, or browse the full catalog.
+          </p>
         </div>
-        <div className="space-y-4 p-6 sm:p-8">
-          <div>
-            <p className="text-lg font-bold text-foreground">Your cart is empty</p>
-            <p className="mt-2 text-sm leading-6 text-muted-foreground">
-              Browse refills, bottled water, branded bottles, and ice to get started.
-            </p>
-          </div>
-          <CustomerButtonLink href="/order" className="w-full sm:w-auto">
-            Browse products
-          </CustomerButtonLink>
-        </div>
+
+        <ul className="mt-6 space-y-2" aria-label="Start ordering">
+          {SERVICE_CARDS.map((card) => {
+            const Icon = card.icon;
+
+            return (
+              <li key={card.type}>
+                <Link
+                  href={`/order?service=${card.type}`}
+                  className="focus-ring group flex min-h-11 items-center gap-3 rounded-xl border border-cyan-100 bg-aqua/30 px-4 py-3 transition-colors hover:border-primary/20 hover:bg-white"
+                >
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white text-primary ring-1 ring-cyan-100">
+                    <Icon className="h-4 w-4" aria-hidden="true" />
+                  </span>
+                  <span className="min-w-0 flex-1 text-left">
+                    <span className="block text-sm font-bold text-foreground">{card.title}</span>
+                    <span className="mt-0.5 block text-xs leading-5 text-muted-foreground">{card.body}</span>
+                  </span>
+                  <ChevronRight
+                    className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-primary"
+                    aria-hidden="true"
+                  />
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+
+        <CustomerButtonLink href="/order" className="mt-6 w-full">
+          Browse all products
+        </CustomerButtonLink>
       </div>
     );
   }

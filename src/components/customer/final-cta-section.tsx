@@ -1,11 +1,13 @@
-import Link from "next/link";
-import { Phone } from "lucide-react";
+import { MessageCircle, Phone } from "lucide-react";
 import { BrandImage } from "@/components/customer/brand-image";
+import { CustomerButtonLink, CustomerExternalLink } from "@/components/customer/customer-button";
 import { BRAND_ASSETS } from "@/lib/brand-assets";
-import { buildPhoneLink, FWM_PHONE_DISPLAY, FWM_WHATSAPP } from "@/lib/contact";
+import { buildPhoneLink, buildWhatsAppLink, FWM_PHONE_DISPLAY, FWM_WHATSAPP } from "@/lib/contact";
+import Link from "next/link";
 
 export function FinalCtaSection({ whatsappNumber = FWM_WHATSAPP }: { whatsappNumber?: string }) {
-  const contactHref = buildPhoneLink(whatsappNumber);
+  const whatsappHref = buildWhatsAppLink(undefined, whatsappNumber);
+  const phoneHref = buildPhoneLink(whatsappNumber);
 
   return (
     <section id="cta">
@@ -22,32 +24,28 @@ export function FinalCtaSection({ whatsappNumber = FWM_WHATSAPP }: { whatsappNum
           />
           <h2 className="text-2xl font-black tracking-tight text-white sm:text-3xl">Order water in under a minute.</h2>
           <p className="mx-auto mt-2 max-w-md text-base text-cyan-50/90">
-            Pickup around campus or student delivery from P30. Contact us for help.
+            Pickup around campus or student delivery from P30. Chat with us on WhatsApp for help.
           </p>
           <div className="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Link
-              href="/order"
-              className="focus-ring inline-flex h-12 items-center justify-center rounded-2xl bg-white px-7 text-base font-bold text-primary shadow-sm transition-colors hover:bg-aqua"
-            >
+            <CustomerButtonLink href="/order" className="bg-white text-primary hover:bg-aqua">
               Start order
-            </Link>
-            <Link
-              href="/track"
-              className="focus-ring inline-flex h-12 items-center justify-center rounded-2xl border border-white/55 px-7 text-base font-bold text-white transition-colors hover:bg-white/10"
-            >
+            </CustomerButtonLink>
+            <CustomerButtonLink href="/track" variant="outline" className="border-white/55 bg-transparent text-white hover:border-white hover:bg-white/10">
               Track order
-            </Link>
-            <a
-              href={contactHref}
-              className="focus-ring inline-flex h-12 items-center justify-center gap-2 rounded-2xl border border-white/55 px-7 text-base font-bold text-white transition-colors hover:bg-white/10"
+            </CustomerButtonLink>
+            <CustomerExternalLink
+              href={whatsappHref}
+              variant="whatsapp"
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              <Phone className="h-5 w-5" />
-              Contact us
-            </a>
+              <MessageCircle className="h-5 w-5" />
+              WhatsApp
+            </CustomerExternalLink>
           </div>
           <div className="mt-7 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-sm text-cyan-50/90">
             <a
-              href={`tel:${FWM_PHONE_DISPLAY.replace(/\s/g, "")}`}
+              href={phoneHref}
               className="focus-ring inline-flex items-center gap-2 font-semibold hover:text-white"
             >
               <Phone className="h-4 w-4" />

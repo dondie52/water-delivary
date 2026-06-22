@@ -5,6 +5,7 @@ import { CheckCircle2, MapPin, Phone, Truck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { StatusPill } from "@/components/ui/status-pill";
 import { CustomerOrder } from "@/modules/orders/customer-order";
+import { DriverBoardSkeleton } from "@/components/skeletons/driver-skeletons";
 
 export function DriverBoard() {
   const [orders, setOrders] = useState<CustomerOrder[]>([]);
@@ -85,7 +86,7 @@ export function DriverBoard() {
       </header>
 
       <section className="mx-auto max-w-lg px-4 py-4">
-        {isLoading ? <p className="rounded-lg border bg-white p-5 text-sm font-semibold text-slate-600">Loading route list...</p> : null}
+        {isLoading ? <DriverBoardSkeleton /> : null}
         {error ? <p className="mb-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm font-semibold text-red-700">{error}</p> : null}
         {!isLoading && readyOrders.length === 0 ? (
           <div className="rounded-lg border bg-white p-5 text-center shadow-sm">

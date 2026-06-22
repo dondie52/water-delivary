@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { Clock, MapPin } from "lucide-react";
+import { CustomerButtonLink } from "@/components/customer/customer-button";
 import { SectionHeading } from "@/components/customer/section-heading";
 
 export function PickupDeliverySection({
@@ -56,12 +56,9 @@ export function PickupDeliverySection({
           </article>
         </div>
 
-        <Link
-          href="/order"
-          className="focus-ring mt-5 inline-flex h-12 items-center justify-center rounded-2xl bg-primary px-7 text-base font-bold text-white shadow-sm shadow-cyan-900/10 transition-colors hover:bg-[#08466f]"
-        >
+        <CustomerButtonLink href="/order" className="mt-5">
           Start your order
-        </Link>
+        </CustomerButtonLink>
       </div>
     </section>
   );
