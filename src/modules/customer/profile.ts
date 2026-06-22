@@ -19,6 +19,16 @@ export const customerLoginSchema = z.object({
   password: z.string().min(1, "Enter your password.")
 });
 
+export const customerResendConfirmationSchema = z.object({
+  email: z.string().email("Enter a valid email address."),
+  next: z
+    .string()
+    .optional()
+    .refine((value) => !value || (value.startsWith("/") && !value.startsWith("//")), {
+      message: "Invalid redirect path."
+    })
+});
+
 export type CustomerProfile = {
   id: string;
   fullName: string;

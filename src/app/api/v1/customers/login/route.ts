@@ -16,7 +16,18 @@ export async function POST(request: NextRequest) {
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 401 });
+    const emailNotConfirmed =
+      error.code === "email_not_confirmed" || error.message.toLowerCase().includes("email not confirmed");
+
+    return NextResponse.json(
+      {
+        error: emailNotConfirmed
+          ? "Your email is not confirmed yet. Open the link we sent you, or request a new confirmation email below."
+          : error.message,
+        code: emailNotConfirmed ? "email_not_confirmed" : undefined
+      },
+      { status: 401 }
+    );
   }
 
   const { data: profileRow } = await supabase.from("customer_profiles").select("*").eq("id", data.user.id).maybeSingle();

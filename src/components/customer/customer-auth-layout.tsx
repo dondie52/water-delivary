@@ -161,10 +161,12 @@ export function CustomerAuthPasswordInput({
 
 export function CustomerAuthError({
   message,
-  errorRef
+  errorRef,
+  children
 }: {
   message: string;
   errorRef?: React.Ref<HTMLDivElement>;
+  children?: React.ReactNode;
 }) {
   return (
     <div
@@ -175,7 +177,30 @@ export function CustomerAuthError({
       aria-live="assertive"
     >
       <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
-      <p>{message}</p>
+      <div className="space-y-3">
+        <p>{message}</p>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+export function CustomerAuthNotice({
+  message,
+  noticeRef
+}: {
+  message: string;
+  noticeRef?: React.Ref<HTMLDivElement>;
+}) {
+  return (
+    <div
+      ref={noticeRef}
+      tabIndex={-1}
+      className="rounded-2xl border border-cyan-100 bg-aqua/35 px-4 py-3 text-sm leading-6 text-primary outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+      role="status"
+      aria-live="polite"
+    >
+      {message}
     </div>
   );
 }

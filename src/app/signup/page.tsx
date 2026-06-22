@@ -12,6 +12,7 @@ import {
   CustomerAuthFooter,
   CustomerAuthInput,
   CustomerAuthLayout,
+  CustomerAuthNotice,
   CustomerAuthPasswordInput,
   CustomerAuthSubmitButton
 } from "@/components/customer/customer-auth-layout";
@@ -45,6 +46,7 @@ function CustomerSignupForm() {
   const [password, setPassword] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [error, setError] = useState<string | null>(null);
+  const [confirmationEmail, setConfirmationEmail] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const errorRef = useRef<HTMLDivElement>(null);
 
@@ -113,9 +115,38 @@ function CustomerSignupForm() {
       return;
     }
 
+    if (payload.data?.requiresEmailConfirmation) {
+      setConfirmationEmail(payload.data.email ?? email);
+      setIsSubmitting(false);
+      return;
+    }
+
     await refresh();
     router.push(nextPath);
     router.refresh();
+  }
+
+  if (confirmationEmail) {
+    return (
+      <CustomerAuthLayout>
+        <CustomerAuthCard backHref={nextPath}>
+          <h1 className="mt-6 text-2xl font-bold tracking-tight text-foreground">Check your email</h1>
+          <p className="mt-2 max-w-[36ch] text-sm leading-6 text-muted-foreground">
+            We sent a confirmation link to <span className="font-semibold text-foreground">{confirmationEmail}</span>.
+            Open it to activate your account, then sign in.
+          </p>
+          <div className="mt-6">
+            <CustomerAuthNotice message="Confirmation links expire after a while. If yours stops working, sign in and use Resend confirmation email." />
+          </div>
+          <Link
+            href={`/login?next=${encodeURIComponent(nextPath)}`}
+            className="focus-ring mt-6 inline-flex min-h-12 w-full items-center justify-center rounded-2xl bg-primary px-4 text-sm font-semibold text-white"
+          >
+            Go to sign in
+          </Link>
+        </CustomerAuthCard>
+      </CustomerAuthLayout>
+    );
   }
 
   return (

@@ -38,6 +38,19 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Could not create account." }, { status: 500 });
   }
 
+  if (!authData.session) {
+    return jsonWithCookies(
+      {
+        data: {
+          requiresEmailConfirmation: true,
+          email: authData.user.email
+        }
+      },
+      getResponse(),
+      { status: 201 }
+    );
+  }
+
   const admin = createAdminClient();
   if (!admin) {
     return NextResponse.json({ error: "Supabase service role environment variables are not configured." }, { status: 503 });

@@ -12,6 +12,7 @@ import {
   CustomerAuthFooter,
   CustomerAuthInput,
   CustomerAuthLayout,
+  CustomerAuthNotice,
   CustomerAuthPasswordInput,
   CustomerAuthSubmitButton
 } from "@/components/customer/customer-auth-layout";
@@ -43,6 +44,8 @@ function CustomerLoginForm() {
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [errorCode, setErrorCode] = useState<string | null>(null);
+  const [resendStatus, setResendStatus] = useState<"idle" | "sending" | "sent" | "failed">("idle");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const errorRef = useRef<HTMLDivElement>(null);
 
@@ -77,6 +80,8 @@ function CustomerLoginForm() {
 
     setIsSubmitting(true);
     setError(null);
+    setErrorCode(null);
+    setResendStatus("idle");
 
     const response = await fetch("/api/v1/customers/login", {
       method: "POST",
@@ -87,6 +92,7 @@ function CustomerLoginForm() {
 
     if (!response.ok) {
       setError(payload.error ?? "Could not sign in. Check your email and password, then try again.");
+      setErrorCode(typeof payload.code === "string" ? payload.code : null);
       setIsSubmitting(false);
       return;
     }
@@ -96,7 +102,26 @@ function CustomerLoginForm() {
     router.refresh();
   }
 
+  async function resendConfirmation() {
+    const nextEmailError = validateEmail(email);
+    setEmailError(nextEmailError);
+    if (nextEmailError) {
+      return;
+    }
+
+    setResendStatus("sending");
+
+    const response = await fetch("/api/v1/customers/resend-confirmation", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, next: nextPath })
+    });
+
+    setResendStatus(response.ok ? "sent" : "failed");
+  }
+
   const credentialsInvalid = Boolean(error);
+  const needsEmailConfirmation = errorCode === "email_not_confirmed";
 
   return (
     <CustomerAuthLayout>
@@ -140,6 +165,8 @@ function CustomerLoginForm() {
                   }
                   if (error) {
                     setError(null);
+                    setErrorCode(null);
+                    setResendStatus("idle");
                   }
                 }}
                 onBlur={handleEmailBlur}
@@ -157,6 +184,8 @@ function CustomerLoginForm() {
                   setPassword(event.target.value);
                   if (error) {
                     setError(null);
+                    setErrorCode(null);
+                    setResendStatus("idle");
                   }
                 }}
                 required
@@ -166,7 +195,33 @@ function CustomerLoginForm() {
 
           {error ? (
             <div className="mt-4">
-              <CustomerAuthError message={error} errorRef={errorRef} />
+              <CustomerAuthError message={error} errorRef={errorRef}>
+                {needsEmailConfirmation ? (
+                  <div className="space-y-2">
+                    <button
+                      type="button"
+                      className="focus-ring inline-flex min-h-11 items-center rounded-xl font-semibold text-red-900 underline underline-offset-2 disabled:opacity-60"
+                      onClick={resendConfirmation}
+                      disabled={resendStatus === "sending" || resendStatus === "sent"}
+                    >
+                      {resendStatus === "sending"
+                        ? "Sending confirmation email…"
+                        : resendStatus === "sent"
+                          ? "Confirmation email sent"
+                          : "Resend confirmation email"}
+                    </button>
+                    {resendStatus === "failed" ? (
+                      <p className="text-xs font-semibold text-red-900">Could not resend. Try again in a moment.</p>
+                    ) : null}
+                  </div>
+                ) : null}
+              </CustomerAuthError>
+            </div>
+          ) : null}
+
+          {resendStatus === "sent" && !error ? (
+            <div className="mt-4">
+              <CustomerAuthNotice message="We sent a new confirmation link. Open it, then return here to sign in." />
             </div>
           ) : null}
 
