@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { LogIn, ShoppingCart, UserRound } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useCart } from "@/components/cart/cart-provider";
@@ -15,8 +16,10 @@ export function CustomerAccountActions({
   iconClassName?: string;
   loginClassName?: string;
 }) {
+  const pathname = usePathname();
   const { isAuthenticated, isLoading } = useCustomerAuth();
   const { itemCount } = useCart();
+  const loginHref = `/login?next=${encodeURIComponent(pathname === "/login" || pathname === "/signup" ? "/order" : pathname)}`;
 
   return (
     <div className={cn("flex items-center gap-2", className)}>
@@ -31,11 +34,12 @@ export function CustomerAccountActions({
         </Link>
       ) : (
         <Link
-          href="/login?next=/order"
+          href={loginHref}
+          aria-label="Login"
           className={cn("focus-ring inline-flex h-10 items-center gap-1.5 rounded-xl px-3 text-sm font-bold", loginClassName)}
         >
-          <LogIn className="h-4 w-4" />
-          <span className="hidden sm:inline">Login</span>
+          <LogIn className="h-4 w-4 sm:hidden" aria-hidden="true" />
+          Login
         </Link>
       )}
 
