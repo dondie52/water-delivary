@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     type: "signup",
     email,
     options: {
-      emailRedirectTo: buildAuthCallbackUrl(next)
+      emailRedirectTo: buildAuthCallbackUrl(next, request)
     }
   });
 

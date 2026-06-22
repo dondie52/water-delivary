@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
     email,
     password,
     options: {
-      emailRedirectTo: buildAuthCallbackUrl(next),
+      emailRedirectTo: buildAuthCallbackUrl(next, request),
       data: {
         full_name: fullName,
         phone_number: normalizedPhone

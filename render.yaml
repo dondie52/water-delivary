@@ -25,4 +25,4 @@ services:
       - key: DRIVER_PASSWORD
         sync: false
       - key: NEXT_PUBLIC_SITE_URL
-        sync: false
+        value: https://water-delivary.onrender.com

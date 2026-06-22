@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;
   const code = searchParams.get("code");
   const next = safeNextPath(searchParams.get("next"));
-  const siteUrl = getSiteUrl();
+  const siteUrl = getSiteUrl(request);
 
   const redirectUrl = new URL(next, siteUrl);
 
