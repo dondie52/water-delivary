@@ -31,7 +31,7 @@ const FILTER_OPTIONS: { value: ProductFilter; label: string }[] = [
   { value: "ice", label: "Ice" }
 ];
 
-const thumbClass = "h-20 w-20 shrink-0 rounded-xl object-cover";
+const thumbClass = "h-20 w-20 shrink-0 rounded-xl bg-cyan-50 object-contain p-1 ring-1 ring-cyan-100";
 
 function inferServiceForProduct(product: PriceItem): ServiceType {
   if (product.category === "refill" || product.sku === "FWM-REFILL-L") return "refill";

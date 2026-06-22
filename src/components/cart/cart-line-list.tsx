@@ -8,7 +8,9 @@ import { productImageForCartItem, SERVICE_LABELS } from "@/lib/catalog/product-i
 import { formatCurrency } from "@/lib/utils";
 import type { CartItemRecord } from "@/modules/customer/profile";
 
-const thumbClass = "h-20 w-20 shrink-0 rounded-xl object-cover";
+const thumbWrapClass =
+  "relative h-28 w-28 shrink-0 overflow-hidden rounded-2xl bg-cyan-50 ring-1 ring-cyan-100 sm:h-24 sm:w-24";
+const thumbClass = "h-full w-full object-contain p-1.5";
 
 function itemLineTotal(item: CartItemRecord) {
   if (item.serviceType === "refill") {
@@ -40,13 +42,14 @@ export function CartLineList({
       <div className="customer-card overflow-hidden p-0 text-center">
         <div className="relative aspect-[16/9] bg-aqua/40">
           <BrandImage
-            src={BRAND_ASSETS.bottles}
+            src={BRAND_ASSETS.categories.bottled}
             alt="Fresh Water Market products"
-            className="h-full w-full object-cover"
+            className="h-full w-full object-contain p-6"
             fallbackLabel="Fresh Water Market"
             width={480}
             height={270}
             sizes="(min-width: 640px) 640px, 100vw"
+            fit="contain"
           />
         </div>
         <div className="space-y-4 p-6 sm:p-8">
@@ -73,15 +76,18 @@ export function CartLineList({
         return (
           <div key={item.id} className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:gap-5 sm:p-5">
             <div className="flex min-w-0 flex-1 items-start gap-4">
-              <BrandImage
-                src={productImageForCartItem(item)}
-                alt={item.productName}
-                className={thumbClass}
-                fallbackLabel={item.productName}
-                width={80}
-                height={80}
-                sizes="80px"
-              />
+              <div className={thumbWrapClass}>
+                <BrandImage
+                  src={productImageForCartItem(item)}
+                  alt={item.productName}
+                  className={thumbClass}
+                  fallbackLabel={item.productName}
+                  width={112}
+                  height={112}
+                  sizes="112px"
+                  fit="contain"
+                />
+              </div>
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2">
                   <p className="font-bold text-foreground">{item.productName}</p>
