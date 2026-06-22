@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
-type Variant = "primary" | "secondary" | "outline" | "contact" | "whatsapp";
+type Variant = "primary" | "secondary" | "outline" | "contact" | "whatsapp" | "inverse" | "inverse-outline";
 
 const variants: Record<Variant, string> = {
   primary:
@@ -9,7 +9,10 @@ const variants: Record<Variant, string> = {
   secondary: "bg-water text-white shadow-sm shadow-cyan-900/10 hover:bg-teal-brand disabled:shadow-none",
   outline: "border border-primary/25 bg-white text-primary hover:border-primary hover:bg-aqua/45",
   contact: "border border-primary/25 bg-white text-primary hover:border-primary hover:bg-aqua/45",
-  whatsapp: "bg-[#059669] text-white shadow-sm hover:bg-[#047857]"
+  whatsapp: "bg-[#059669] text-white shadow-sm hover:bg-[#047857]",
+  inverse: "bg-white text-primary shadow-sm shadow-cyan-900/10 hover:bg-aqua disabled:shadow-none",
+  "inverse-outline":
+    "border border-white/55 bg-transparent text-white hover:border-white hover:bg-white/10 disabled:shadow-none"
 };
 
 const baseClass =

@@ -50,8 +50,8 @@ export function StepService({
                 ) : null}
               </div>
               <div className="flex flex-1 flex-col p-4">
-                <p className="font-bold leading-5 text-[#061a4f]">{service.title}</p>
-                <p className="mt-1 text-sm leading-5 text-primary/75">{service.body}</p>
+                <p className="font-bold leading-5 text-foreground">{service.title}</p>
+                <p className="mt-1 text-sm leading-5 text-muted-foreground">{service.body}</p>
                 <p className="mt-auto pt-3 text-sm font-extrabold text-primary">{service.price}</p>
               </div>
             </div>

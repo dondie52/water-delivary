@@ -33,15 +33,15 @@ export function FeedbackForm({ orderNumber }: { orderNumber: string }) {
   return (
     <main className="water-canvas grid min-h-screen place-items-center px-4">
       <form className="w-full max-w-md rounded-lg border bg-white p-5 shadow-sm" onSubmit={submit}>
-        <h1 className="text-2xl font-bold text-slate-950">Rate your order</h1>
-        <p className="mt-2 text-sm text-slate-600">Order {orderNumber}</p>
-        <label className="mt-5 grid gap-2 text-sm font-semibold text-slate-800">
+        <h1 className="text-2xl font-bold text-foreground">Rate your order</h1>
+        <p className="mt-2 text-sm text-muted-foreground">Order {orderNumber}</p>
+        <label className="mt-5 grid gap-2 text-sm font-semibold text-foreground">
           Rating
           <select className="h-11 rounded-md border bg-white px-3 text-sm focus-ring" value={rating} onChange={(event) => setRating(Number(event.target.value))}>
             {[5, 4, 3, 2, 1].map((value) => <option key={value} value={value}>{value}</option>)}
           </select>
         </label>
-        <label className="mt-4 grid gap-2 text-sm font-semibold text-slate-800">
+        <label className="mt-4 grid gap-2 text-sm font-semibold text-foreground">
           Comment
           <textarea className="min-h-28 rounded-md border bg-white p-3 text-sm focus-ring" value={comment} onChange={(event) => setComment(event.target.value)} />
         </label>

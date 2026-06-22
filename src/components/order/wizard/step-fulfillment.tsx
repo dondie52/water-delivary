@@ -60,7 +60,7 @@ export function StepFulfillment({
                 type="button"
                 aria-pressed={form.pickupLocation === location}
                 className={cn(
-                  "focus-ring rounded-full border px-4 py-2.5 text-left text-sm font-semibold transition",
+                  "focus-ring min-h-11 rounded-full border px-4 py-2.5 text-left text-sm font-semibold transition",
                   form.pickupLocation === location
                     ? "border-primary bg-primary text-white"
                     : "border-cyan-100 bg-aqua/45 text-primary hover:border-primary/40 hover:bg-white"
@@ -98,7 +98,7 @@ export function StepFulfillment({
                     aria-pressed={selected}
                     aria-label={`${slot.label}${statusLabel}`}
                     className={cn(
-                      "focus-ring rounded-full border px-4 py-2.5 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-40",
+                      "focus-ring min-h-11 rounded-full border px-4 py-2.5 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-40",
                       selected
                         ? "border-primary bg-primary text-white"
                         : "border-cyan-100 bg-aqua/45 text-primary hover:border-primary/40 hover:bg-white"

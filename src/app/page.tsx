@@ -10,7 +10,7 @@ import { WinterHydrationSection } from "@/components/customer/winter-hydration-s
 import { PricingSection, type PopularPrice } from "@/components/customer/pricing-section";
 import { PickupDeliverySection } from "@/components/customer/pickup-delivery-section";
 import { LowerLandingSections } from "@/components/customer/lower-landing-sections";
-import { CorporateSection } from "@/components/customer/corporate-section";
+import { CorporateBanner } from "@/components/customer/corporate-section";
 import { FinalCtaSection } from "@/components/customer/final-cta-section";
 import type { Metadata } from "next";
 
@@ -63,7 +63,7 @@ export default async function Home() {
           deliveryFee={settings.studentDeliveryFee}
         />
         <LowerLandingSections />
-        <CorporateSection />
+        <CorporateBanner />
         <FinalCtaSection whatsappNumber={settings.whatsappNumber} />
       </main>
     </CustomerShell>

@@ -48,14 +48,14 @@ export function AdvancedOptionsPanel({
       >
         <span>
           Advanced options
-          <span className="mt-0.5 block text-xs font-medium text-primary/65">Notes, promo, payment, slot override...</span>
+          <span className="mt-0.5 block text-xs font-medium text-muted-foreground">Notes, promo, payment, slot override...</span>
         </span>
         <ChevronDown className={cn("h-4 w-4 shrink-0 transition", isOpen && "rotate-180")} />
       </button>
       {isOpen ? (
         <div className="grid gap-3 border-t px-4 py-4">
           <label className="grid gap-1">
-            <span className="text-xs font-semibold text-primary/75">Customer notes</span>
+            <span className="text-xs font-semibold text-muted-foreground">Customer notes</span>
             <textarea
               className="focus-ring min-h-20 w-full rounded-xl border border-cyan-100 bg-white p-3 text-sm placeholder:text-primary/55"
               value={form.customerNotes}
@@ -66,7 +66,7 @@ export function AdvancedOptionsPanel({
 
           <div className="grid gap-2 sm:grid-cols-2">
             <label className="grid gap-1">
-              <span className="text-xs font-semibold text-primary/75">Promo code</span>
+              <span className="text-xs font-semibold text-muted-foreground">Promo code</span>
               <div className="flex gap-2">
                 <input
                   className={inputClass}
@@ -83,7 +83,7 @@ export function AdvancedOptionsPanel({
               ) : null}
             </label>
             <label className="grid gap-1">
-              <span className="text-xs font-semibold text-primary/75">Referred by phone</span>
+              <span className="text-xs font-semibold text-muted-foreground">Referred by phone</span>
               <input
                 className={inputClass}
                 value={form.referredByPhone ?? ""}
@@ -96,7 +96,7 @@ export function AdvancedOptionsPanel({
           {!hideContainerCount ? (
             <div className="grid gap-2 sm:grid-cols-2">
               <label className="grid gap-1">
-                <span className="text-xs font-semibold text-primary/75">Container count</span>
+                <span className="text-xs font-semibold text-muted-foreground">Container count</span>
                 <input
                   className={inputClass}
                   type="number"
@@ -110,7 +110,7 @@ export function AdvancedOptionsPanel({
                 />
               </label>
               <label className="grid gap-1">
-                <span className="text-xs font-semibold text-primary/75">Large container count</span>
+                <span className="text-xs font-semibold text-muted-foreground">Large container count</span>
                 <input
                   className={inputClass}
                   type="number"
@@ -122,7 +122,7 @@ export function AdvancedOptionsPanel({
             </div>
           ) : (
             <label className="grid gap-1">
-              <span className="text-xs font-semibold text-primary/75">Large container count</span>
+              <span className="text-xs font-semibold text-muted-foreground">Large container count</span>
               <input
                 className={inputClass}
                 type="number"
@@ -135,7 +135,7 @@ export function AdvancedOptionsPanel({
 
           {caseProducts.length > 0 ? (
             <label className="grid gap-1">
-              <span className="text-xs font-semibold text-primary/75">Standard case override</span>
+              <span className="text-xs font-semibold text-muted-foreground">Standard case override</span>
               <select
                 className={inputClass}
                 value={form.productSku}
@@ -152,7 +152,7 @@ export function AdvancedOptionsPanel({
           ) : null}
 
           <label className="grid gap-1">
-            <span className="text-xs font-semibold text-primary/75">Payment method</span>
+            <span className="text-xs font-semibold text-muted-foreground">Payment method</span>
             <select
               className={inputClass}
               value={form.paymentMethod}
@@ -169,7 +169,7 @@ export function AdvancedOptionsPanel({
           <div className="grid gap-2 sm:grid-cols-2">
             {form.fulfillmentType === "pickup" ? (
               <label className="grid gap-1">
-                <span className="text-xs font-semibold text-primary/75">Pickup location override</span>
+                <span className="text-xs font-semibold text-muted-foreground">Pickup location override</span>
                 <select className={inputClass} value={form.pickupLocation} onChange={(event) => onUpdate("pickupLocation", event.target.value)}>
                   {pickupLocations.map((location) => (
                     <option key={location} value={location}>
@@ -180,7 +180,7 @@ export function AdvancedOptionsPanel({
               </label>
             ) : (
               <label className="grid gap-1">
-                <span className="text-xs font-semibold text-primary/75">Delivery slot override</span>
+                <span className="text-xs font-semibold text-muted-foreground">Delivery slot override</span>
                 <select className={inputClass} value={form.deliverySlot} onChange={(event) => onUpdate("deliverySlot", event.target.value)}>
                   {deliverySlots.map((slot) => {
                     const slotAvailability = availability.find((availableSlot) => availableSlot.label === slot.label);
@@ -195,7 +195,7 @@ export function AdvancedOptionsPanel({
               </label>
             )}
             <label className="grid gap-1">
-              <span className="text-xs font-semibold text-primary/75">Fulfillment date</span>
+              <span className="text-xs font-semibold text-muted-foreground">Fulfillment date</span>
               <select
                 className={inputClass}
                 value={form.requestedFulfillmentDate}

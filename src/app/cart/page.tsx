@@ -37,7 +37,7 @@ export default function CartPage() {
           <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary shadow-sm">
             <ShoppingCart className="h-7 w-7" aria-hidden="true" />
           </div>
-          <h1 className="mt-5 text-balance text-3xl font-black tracking-tight text-slate-950">Your cart</h1>
+          <h1 className="mt-5 text-balance text-3xl font-black tracking-tight text-foreground">Your cart</h1>
           <p className="mt-2 max-w-[42ch] text-sm leading-6 text-muted-foreground">
             {isPageLoading
               ? "Loading your items…"
@@ -69,6 +69,7 @@ export default function CartPage() {
 
               <div
                 className="fixed inset-x-0 bottom-0 z-20 border-t border-cyan-100 bg-white/95 p-4 shadow-[0_-8px_24px_rgba(15,23,42,0.08)] backdrop-blur-sm sm:hidden"
+                style={{ paddingBottom: "max(1rem, env(safe-area-inset-bottom))" }}
                 aria-label="Cart checkout summary"
               >
                 <div className="mx-auto flex max-w-2xl items-center justify-between gap-4">

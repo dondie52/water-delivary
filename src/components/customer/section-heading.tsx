@@ -13,7 +13,7 @@ export function SectionHeading({
 }) {
   return (
     <div className={cn(align === "center" ? "text-center" : "text-left", className)}>
-      <h2 className="text-2xl font-extrabold tracking-tight text-slate-950 sm:text-3xl">{title}</h2>
+      <h2 className="text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">{title}</h2>
       <span
         aria-hidden="true"
         className={cn(
@@ -21,7 +21,7 @@ export function SectionHeading({
           align === "center" ? "mx-auto" : ""
         )}
       />
-      {subtitle ? <p className="mt-3 text-base leading-7 text-slate-600">{subtitle}</p> : null}
+      {subtitle ? <p className="mt-3 text-base leading-7 text-muted-foreground">{subtitle}</p> : null}
     </div>
   );
 }

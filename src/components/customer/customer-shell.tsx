@@ -17,7 +17,7 @@ export function CustomerShell({
   return (
     <div
       className={cn(
-        "water-canvas min-h-screen overflow-x-hidden text-slate-950",
+        "water-canvas min-h-screen overflow-x-hidden text-foreground",
         compactFooter ? "pb-6" : "pb-28 sm:pb-20",
         className
       )}

@@ -69,7 +69,7 @@ export function StepProduct({
     return (
       <div className="space-y-5">
         <div>
-          <p className="text-sm font-semibold text-[#061a4f]">Refill size per container</p>
+          <p className="text-sm font-semibold text-foreground">Refill size per container</p>
           <div className="mt-3 grid grid-cols-3 gap-2 sm:grid-cols-5">
             {REFILL_SIZES.map((size) => (
               <button
@@ -92,7 +92,7 @@ export function StepProduct({
         </div>
         {refillSize === "custom" ? (
           <label className="grid gap-2">
-            <span className="text-sm font-semibold text-[#061a4f]">Litres per container</span>
+            <span className="text-sm font-semibold text-foreground">Litres per container</span>
             <input
               className="focus-ring h-12 w-full rounded-2xl border border-cyan-100 bg-white px-4 text-sm"
               type="number"
@@ -129,7 +129,7 @@ export function StepProduct({
       <div className="space-y-5">
         <div className="rounded-2xl border border-cyan-200 bg-cyan-50/80 p-4">
           <p className="text-sm font-bold text-primary">Contact for current pricing</p>
-          <p className="mt-2 text-sm leading-6 text-primary/75">
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">
             Ice prices vary by availability. Submit your request and we will confirm the price with you before delivery.
           </p>
         </div>
@@ -154,7 +154,7 @@ export function StepProduct({
             selected={form.productSku === product.sku}
             onClick={() => onSelectProduct(product.sku)}
           >
-            <p className="font-bold text-[#061a4f]">{formatProductLabel(product)}</p>
+            <p className="font-bold text-foreground">{formatProductLabel(product)}</p>
             <p className="mt-1 text-sm font-bold text-primary">{formatCurrency(product.price)}</p>
           </SelectableTile>
         ))}
@@ -165,7 +165,7 @@ export function StepProduct({
           <QuantityStepper value={form.quantity || 1} onChange={onQuantityChange} />
         </div>
       ) : form.productSku === "FWM-DESIGN-STICKER" ? (
-        <p className="text-sm text-primary/75">Sticker design is a one-time add-on. Quantity is 1.</p>
+        <p className="text-sm text-muted-foreground">Sticker design is a one-time add-on. Quantity is 1.</p>
       ) : null}
       {service === "personalized" && onUpdate && onUploadArtwork ? (
         <PersonalizedDesignPanel
@@ -243,8 +243,8 @@ function PersonalizedDesignPanel({
   return (
     <div className="grid gap-4 rounded-2xl border border-cyan-100 bg-aqua/30 p-4">
       <div>
-        <p className="text-sm font-bold text-[#061a4f]">Bottle design</p>
-        <p className="mt-1 text-sm leading-6 text-primary/75">
+        <p className="text-sm font-bold text-foreground">Bottle design</p>
+        <p className="mt-1 text-sm leading-6 text-muted-foreground">
           Add your logo, picture, or label artwork now, or leave notes for our team.
         </p>
       </div>
@@ -266,7 +266,7 @@ function PersonalizedDesignPanel({
             <Upload className="h-5 w-5" aria-hidden="true" />
           </span>
           <span className="min-w-0">
-            <span className="block text-sm font-bold text-[#061a4f]">
+            <span className="block text-sm font-bold text-foreground">
               {isUploadingArtwork ? "Uploading artwork..." : "Upload picture or design"}
             </span>
             <span className="mt-0.5 block text-xs font-semibold text-primary/70">PNG, JPG, WebP, or PDF up to 8MB</span>
@@ -288,7 +288,7 @@ function PersonalizedDesignPanel({
             </span>
           )}
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-bold text-[#061a4f]">{displayName || "Artwork uploaded"}</p>
+            <p className="truncate text-sm font-bold text-foreground">{displayName || "Artwork uploaded"}</p>
             <p className="mt-0.5 text-xs font-semibold text-primary/70">
               {isUploadingArtwork ? "Uploading..." : form.artworkUrl ? "Attached to this order" : "Ready to attach"}
             </p>
@@ -308,7 +308,7 @@ function PersonalizedDesignPanel({
         <p className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm font-semibold text-red-700">{artworkError}</p>
       ) : null}
 
-      <label className="flex items-center gap-2 text-sm font-semibold text-[#061a4f]">
+      <label className="flex items-center gap-2 text-sm font-semibold text-foreground">
         <input
           type="checkbox"
           checked={form.stickerDesignRequired}

@@ -36,7 +36,7 @@ export function CustomerTestimonialCarousel() {
       <button
         type="button"
         onClick={goToPrevious}
-        className="focus-ring absolute left-0 top-1/2 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-primary/30 bg-cyan-50 text-primary transition hover:border-primary hover:bg-white sm:inline-flex"
+        className="focus-ring absolute left-0 top-1/2 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-primary/30 bg-cyan-50 text-primary transition hover:border-primary hover:bg-white sm:inline-flex"
         aria-label="Previous customer review"
       >
         <ChevronLeft className="h-4 w-4" />
@@ -48,15 +48,15 @@ export function CustomerTestimonialCarousel() {
         ))}
       </div>
 
-      <blockquote className="mx-auto mt-4 max-w-2xl text-lg leading-8 text-[#061a4f] sm:text-xl sm:leading-9">
+      <blockquote className="mx-auto mt-4 max-w-2xl text-lg leading-8 text-foreground sm:text-xl sm:leading-9">
         {active.quote}
       </blockquote>
-      <p className="mt-5 text-sm font-bold text-[#061a4f]">- {active.author}</p>
+      <p className="mt-5 text-sm font-bold text-muted-foreground">— {active.author}</p>
 
       <button
         type="button"
         onClick={goToNext}
-        className="focus-ring absolute right-0 top-1/2 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-primary/30 bg-cyan-50 text-primary transition hover:border-primary hover:bg-white sm:inline-flex"
+        className="focus-ring absolute right-0 top-1/2 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-primary/30 bg-cyan-50 text-primary transition hover:border-primary hover:bg-white sm:inline-flex"
         aria-label="Next customer review"
       >
         <ChevronRight className="h-4 w-4" />

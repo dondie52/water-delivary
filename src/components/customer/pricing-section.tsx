@@ -23,7 +23,7 @@ export function PricingSection({ prices }: { prices: PopularPrice[] }) {
         <div className="mb-7 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h2 className="text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">Popular prices</h2>
-            <p className="mt-2 text-base leading-7 text-primary/80">Clear prices for students, teams, and households.</p>
+            <p className="mt-2 text-base leading-7 text-muted-foreground">Clear prices for students, teams, and households.</p>
           </div>
           <CustomerButtonLink href="/order" className="h-10 px-5 text-sm font-extrabold sm:w-auto">
             Start order
@@ -35,7 +35,7 @@ export function PricingSection({ prices }: { prices: PopularPrice[] }) {
             <li key={item.name}>
               <Link
                 href={item.href}
-                className="group flex h-full flex-col overflow-hidden rounded-2xl border border-cyan-100 bg-white transition-[border-color,transform] duration-200 hover:-translate-y-0.5 hover:border-primary/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                className="group customer-card customer-card-interactive flex h-full flex-col overflow-hidden p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
               >
                 <div className="relative aspect-[16/10] bg-cyan-50">
                   {item.popular ? (

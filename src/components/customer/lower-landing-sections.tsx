@@ -52,88 +52,94 @@ const communityProof = [
 export function LowerLandingSections() {
   return (
     <>
-      <section className="bg-cyan-50 px-4 py-14 text-foreground sm:px-6 sm:py-16 lg:px-8">
-        <div className="mx-auto max-w-5xl text-center">
-          <BrandImage
-            src={BRAND_ASSETS.logo}
-            alt="Fresh Water Market logo"
-            fit="contain"
-            className="mx-auto h-14 w-auto max-w-[200px] object-contain"
-            fallbackLabel="Fresh Water Market"
-            width={400}
-            height={120}
-          />
-          <h2 className="mx-auto mt-5 max-w-3xl text-2xl font-extrabold tracking-tight sm:text-3xl">
-            Trusted on campus &amp; across Gaborone
-          </h2>
-          <CustomerTestimonialCarousel />
-        </div>
-      </section>
-
-      <section className="bg-aqua/45 px-4 py-16 text-foreground sm:px-6 lg:px-8">
-        <div className="mx-auto grid max-w-6xl items-center gap-10 lg:grid-cols-2">
-          <div>
-            <h2 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
-              Hydrating a healthy Gaborone
+      <section className="bg-cyan-50 px-4 py-12 text-foreground sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-6xl">
+          <div className="text-center">
+            <BrandImage
+              src={BRAND_ASSETS.logo}
+              alt="Fresh Water Market logo"
+              fit="contain"
+              className="mx-auto h-12 w-auto max-w-[180px] object-contain"
+              fallbackLabel="Fresh Water Market"
+              width={400}
+              height={120}
+            />
+            <h2 className="mx-auto mt-4 max-w-3xl text-2xl font-extrabold tracking-tight sm:text-3xl">
+              Trusted on campus &amp; across Gaborone
             </h2>
-            <p className="mt-4 text-base leading-7 text-primary/80">
-              Environmental and community responsibility built into how we deliver water.
-            </p>
-            <ul className="mt-6 space-y-3">
-              {communityProof.map((line) => (
-                <li key={line} className="flex gap-3 text-sm leading-6 text-foreground">
-                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-water" aria-hidden="true" />
-                  {line}
-                </li>
-              ))}
-            </ul>
+            <CustomerTestimonialCarousel />
           </div>
-          <BrandImage
-            src={BRAND_ASSETS.heroBanner}
-            alt="Fresh Water Market water supply for homes, campus, and events"
-            className="aspect-[4/3] w-full rounded-2xl object-cover"
-            fallbackLabel="Fresh Water Market"
-            width={1400}
-            height={720}
-            sizes="(min-width: 1024px) 520px, 100vw"
-          />
+
+          <div className="mt-10 grid items-center gap-8 border-t border-cyan-100 pt-10 lg:grid-cols-2 lg:gap-10">
+            <div>
+              <h3 className="text-xl font-extrabold tracking-tight text-foreground sm:text-2xl">
+                Hydrating a healthy Gaborone
+              </h3>
+              <p className="mt-3 text-base leading-7 text-muted-foreground">
+                Environmental and community responsibility built into how we deliver water.
+              </p>
+              <ul className="mt-5 space-y-3">
+                {communityProof.map((line) => (
+                  <li key={line} className="flex gap-3 text-sm leading-6 text-foreground">
+                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-water" aria-hidden="true" />
+                    {line}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <BrandImage
+              src={BRAND_ASSETS.heroBanner}
+              alt="Fresh Water Market water supply for homes, campus, and events"
+              className="aspect-[4/3] w-full rounded-2xl object-cover"
+              fallbackLabel="Fresh Water Market"
+              width={1400}
+              height={720}
+              sizes="(min-width: 1024px) 520px, 100vw"
+            />
+          </div>
         </div>
       </section>
 
-      <section className="bg-cyan-50 px-4 py-16 text-foreground sm:px-6 lg:px-8">
+      <section className="bg-aqua/45 px-4 py-12 text-foreground sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl">
-          <h2 className="text-center text-3xl font-extrabold tracking-tight">Frequently Asked Questions</h2>
-          <div className="mt-10 divide-y divide-primary/25">
+          <h2 className="text-center text-2xl font-extrabold tracking-tight sm:text-3xl">Frequently Asked Questions</h2>
+          <div className="mt-8 divide-y divide-primary/20">
             {faqs.map((faq) => (
               <details key={faq.question} className="group py-4">
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-base font-bold">
                   {faq.question}
-                  <span className="text-2xl leading-none text-primary group-open:rotate-45">+</span>
+                  <span className="text-2xl leading-none text-primary transition-transform duration-200 group-open:rotate-45">
+                    +
+                  </span>
                 </summary>
-                <p className="mt-3 max-w-2xl text-sm leading-6 text-primary/80">{faq.answer}</p>
+                <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">{faq.answer}</p>
               </details>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="bg-cyan-50 px-4 pb-16 pt-4 text-foreground sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-5xl rounded-2xl bg-white p-6 shadow-sm shadow-cyan-900/10 sm:p-8">
-          <h2 className="text-center text-2xl font-extrabold tracking-tight">What can we help you find today?</h2>
-          <div className="mt-8 grid gap-6 md:grid-cols-3">
+      <section className="bg-aqua/45 px-4 pb-12 pt-2 text-foreground sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-5xl rounded-2xl border border-cyan-100 bg-white p-6 sm:p-8">
+          <h2 className="text-center text-xl font-extrabold tracking-tight sm:text-2xl">What can we help you find today?</h2>
+          <div className="mt-6 grid gap-4 md:grid-cols-3">
             {helpLinks.map((item) => {
               const Icon = item.icon;
               return (
-                <Link key={item.title} href={item.href} className="focus-ring group flex gap-4 rounded-xl p-2 transition-colors hover:bg-cyan-50">
-                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-primary text-primary">
-                    <Icon className="h-6 w-6" />
+                <Link
+                  key={item.title}
+                  href={item.href}
+                  className="focus-ring group flex min-h-11 gap-4 rounded-xl p-2 transition-colors hover:bg-cyan-50"
+                >
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-primary text-primary">
+                    <Icon className="h-5 w-5" />
                   </span>
                   <span>
                     <span className="flex items-center gap-2 text-sm font-extrabold text-primary">
                       {item.title}
                       <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
                     </span>
-                    <span className="mt-2 block text-sm leading-6 text-foreground">{item.body}</span>
+                    <span className="mt-1.5 block text-sm leading-6 text-muted-foreground">{item.body}</span>
                   </span>
                 </Link>
               );

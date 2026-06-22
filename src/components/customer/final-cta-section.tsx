@@ -27,10 +27,10 @@ export function FinalCtaSection({ whatsappNumber = FWM_WHATSAPP }: { whatsappNum
             Pickup around campus or student delivery from P30. Chat with us on WhatsApp for help.
           </p>
           <div className="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <CustomerButtonLink href="/order" className="bg-white text-primary hover:bg-aqua">
+            <CustomerButtonLink href="/order" variant="inverse">
               Start order
             </CustomerButtonLink>
-            <CustomerButtonLink href="/track" variant="outline" className="border-white/55 bg-transparent text-white hover:border-white hover:bg-white/10">
+            <CustomerButtonLink href="/track" variant="inverse-outline">
               Track order
             </CustomerButtonLink>
             <CustomerExternalLink

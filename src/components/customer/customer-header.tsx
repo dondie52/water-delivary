@@ -28,10 +28,10 @@ export function CustomerHeader() {
       <div className="flex items-center justify-center gap-2 bg-aqua/55 px-4 py-2 text-center text-xs font-semibold text-primary sm:text-sm">
         <span>Fresh water refills, bottled water, ice and delivery across campus &amp; Gaborone.</span>
         <Link
-          href="/order"
+          href="/#services"
           className="focus-ring hidden shrink-0 font-bold text-primary underline underline-offset-2 hover:text-primary-hover sm:inline"
         >
-          Learn more
+          View services
         </Link>
       </div>
 

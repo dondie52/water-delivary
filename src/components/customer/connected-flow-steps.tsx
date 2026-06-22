@@ -31,7 +31,7 @@ export function ConnectedFlowSteps({ steps, className }: ConnectedFlowStepsProps
               <Icon className="h-5 w-5" />
             </span>
             <h3 className="mt-3 text-base font-extrabold text-foreground">{step.title}</h3>
-            <p className="mt-1 text-sm leading-6 text-primary/75">{step.body}</p>
+            <p className="mt-1 text-sm leading-6 text-muted-foreground">{step.body}</p>
           </li>
         );
       })}

@@ -23,7 +23,7 @@ export function QuantityStepper({
       >
         <Minus className="h-5 w-5" />
       </button>
-      <span className="min-w-[2.5rem] text-center text-xl font-black text-slate-950">{value}</span>
+      <span className="min-w-[2.5rem] text-center text-xl font-black text-foreground">{value}</span>
       <button
         type="button"
         className="focus-ring flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-white shadow-sm disabled:opacity-40"
@@ -56,7 +56,7 @@ export function SelectableTile({
         "focus-ring w-full rounded-2xl bg-white p-4 text-left shadow-sm shadow-cyan-900/5 ring-1 ring-cyan-100 transition-[background-color,border-color,box-shadow,transform] duration-200",
         selected
           ? "bg-aqua/55 ring-2 ring-primary/40"
-          : "hover:-translate-y-0.5 hover:bg-aqua/35 hover:shadow-md hover:shadow-cyan-900/10",
+          : "customer-card-interactive hover:bg-aqua/35",
         className
       )}
     >

@@ -55,8 +55,8 @@ export function OrderReceipt({ orderNumber }: { orderNumber: string }) {
       <CustomerShell>
         <main className="grid min-h-[50vh] place-items-center px-4">
           <div className="customer-card max-w-md text-center">
-            <h1 className="text-xl font-bold text-slate-950">Receipt not found</h1>
-            <p className="mt-2 text-sm text-slate-600">{error ?? "We could not find this order."}</p>
+            <h1 className="text-xl font-bold text-foreground">Receipt not found</h1>
+            <p className="mt-2 text-sm text-muted-foreground">{error ?? "We could not find this order."}</p>
             <Link className="mt-4 inline-flex text-sm font-semibold text-primary hover:underline" href="/order">
               Place a new order
             </Link>
@@ -87,8 +87,8 @@ export function OrderReceipt({ orderNumber }: { orderNumber: string }) {
             <div className="mx-auto mt-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700">
               <CheckCircle2 className="h-8 w-8" />
             </div>
-            <h1 className="mt-4 text-2xl font-black text-slate-950">Thank you!</h1>
-            <p className="mt-2 text-sm text-slate-600">Your Fresh Water Market order is on its way.</p>
+            <h1 className="mt-4 text-2xl font-black text-foreground">Thank you!</h1>
+            <p className="mt-2 text-sm text-muted-foreground">Your Fresh Water Market order is on its way.</p>
             <p className="mt-4 text-lg font-bold text-primary">{order.orderNumber}</p>
             <div className="mt-5">
               <OrderStatusStepper status={order.status} />
@@ -105,18 +105,18 @@ export function OrderReceipt({ orderNumber }: { orderNumber: string }) {
 
           <div className="customer-card mt-4 space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-slate-600">Total</span>
+              <span className="text-sm text-muted-foreground">Total</span>
               <span className="text-2xl font-black text-primary">{formatCurrency(order.total)}</span>
             </div>
             <div className="border-t pt-4">
-              <p className="text-sm font-semibold text-slate-500">{order.fulfillmentType === "delivery" ? "Delivery" : "Pickup"}</p>
-              <p className="mt-1 font-bold text-slate-950">{fulfillmentLine}</p>
+              <p className="text-sm font-semibold text-muted-foreground">{order.fulfillmentType === "delivery" ? "Delivery" : "Pickup"}</p>
+              <p className="mt-1 font-bold text-foreground">{fulfillmentLine}</p>
             </div>
             <div className="border-t pt-4 text-sm">
-              <p className="font-semibold text-slate-950">{order.productName}</p>
-              {order.quantity > 0 ? <p className="text-slate-600">Qty: {order.quantity}</p> : null}
-              {order.refillLitres > 0 ? <p className="text-slate-600">Refill: {order.refillLitres}L</p> : null}
-              {order.deliveryFee > 0 ? <p className="text-slate-600">Delivery: {formatCurrency(order.deliveryFee)}</p> : null}
+              <p className="font-semibold text-foreground">{order.productName}</p>
+              {order.quantity > 0 ? <p className="text-muted-foreground">Qty: {order.quantity}</p> : null}
+              {order.refillLitres > 0 ? <p className="text-muted-foreground">Refill: {order.refillLitres}L</p> : null}
+              {order.deliveryFee > 0 ? <p className="text-muted-foreground">Delivery: {formatCurrency(order.deliveryFee)}</p> : null}
               {order.discountAmount > 0 ? <p className="text-emerald-700">Discount: -{formatCurrency(order.discountAmount)}</p> : null}
             </div>
           </div>
@@ -139,7 +139,7 @@ export function OrderReceipt({ orderNumber }: { orderNumber: string }) {
           <div className="customer-card mt-4 print:hidden">
             <button
               type="button"
-              className="focus-ring flex w-full items-center justify-between text-sm font-bold text-slate-800"
+              className="focus-ring flex w-full items-center justify-between text-sm font-bold text-foreground"
               onClick={() => setDetailsOpen((current) => !current)}
             >
               Order details
@@ -147,33 +147,33 @@ export function OrderReceipt({ orderNumber }: { orderNumber: string }) {
             </button>
             {detailsOpen ? (
               <div className="mt-4 space-y-4 border-t pt-4">
-                <div className="text-sm text-slate-600">
+                <div className="text-sm text-muted-foreground">
                   <p>{order.customerName} · {order.phoneNumber}</p>
                   <p className="mt-1">{new Date(order.createdAt).toLocaleString()}</p>
                   <p className="mt-1">Paid: {formatCurrency(order.amountPaid)} · Balance: {formatCurrency(order.balanceDue)}</p>
                 </div>
                 {events.length > 0 ? (
                   <div className="space-y-2">
-                    <p className="text-sm font-bold text-slate-950">Status history</p>
+                    <p className="text-sm font-bold text-foreground">Status history</p>
                     {events.map((event) => (
                       <div key={event.id} className="rounded-xl bg-slate-50 p-3 text-sm">
                         <p className="font-semibold capitalize">{event.eventType}</p>
-                        <p className="text-slate-600">{event.fromValue ? `${event.fromValue} → ` : ""}{event.toValue ?? event.note}</p>
+                        <p className="text-muted-foreground">{event.fromValue ? `${event.fromValue} → ` : ""}{event.toValue ?? event.note}</p>
                       </div>
                     ))}
                   </div>
                 ) : null}
                 <details className="text-sm">
-                  <summary className="cursor-pointer font-bold text-slate-800">Copy invoice text</summary>
+                  <summary className="cursor-pointer font-bold text-foreground">Copy invoice text</summary>
                   <pre className="mt-2 whitespace-pre-wrap rounded-xl bg-slate-50 p-3 text-xs">{buildInvoiceSummary(order)}</pre>
                 </details>
                 <details className="text-sm">
-                  <summary className="cursor-pointer font-bold text-slate-800">WhatsApp templates</summary>
+                  <summary className="cursor-pointer font-bold text-foreground">WhatsApp templates</summary>
                   <div className="mt-2 space-y-2">
                     {whatsappTemplateTypes.map((type) => (
                       <div key={type} className="rounded-xl bg-slate-50 p-3">
                         <p className="font-semibold capitalize">{type.replaceAll("_", " ")}</p>
-                        <p className="mt-1 text-slate-600">{buildWhatsappTemplate(type, order)}</p>
+                        <p className="mt-1 text-muted-foreground">{buildWhatsappTemplate(type, order)}</p>
                       </div>
                     ))}
                   </div>

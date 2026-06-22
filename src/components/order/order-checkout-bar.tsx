@@ -20,7 +20,7 @@ export function OrderCheckoutBar({
 
   return (
     <div
-      className="fixed inset-x-0 bottom-0 z-40 border-t border-cyan-100 bg-white lg:hidden"
+      className="fixed inset-x-0 bottom-0 z-40 border-t border-cyan-100 bg-white/95 backdrop-blur-sm lg:hidden"
       style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}
     >
       <div className="mx-auto max-w-6xl space-y-3 px-4 pt-3 sm:px-6">

@@ -1,54 +1,24 @@
-import { BrandImage } from "@/components/customer/brand-image";
+import { Sparkles } from "lucide-react";
 import { CustomerButtonLink } from "@/components/customer/customer-button";
-import { BRAND_ASSETS } from "@/lib/brand-assets";
 
-const useCases = ["Events", "Corporates", "Weddings", "Sports teams", "Student orgs"];
-
-export function CorporateSection() {
+export function CorporateBanner() {
   return (
-    <section id="corporate" className="water-tint">
-      <div className="customer-section w-full">
-        <div className="surface grid items-center gap-8 p-5 sm:p-7 lg:grid-cols-2 lg:gap-10">
-          <div className="relative order-2 lg:order-1">
-            <BrandImage
-              src={BRAND_ASSETS.personalizedBottles}
-              alt="Personalized Fresh Water Market bottles"
-              className="aspect-[4/3] w-full rounded-2xl"
-              fallbackLabel="Personalized bottles"
-              width={640}
-              height={480}
-              sizes="(min-width: 1024px) 480px, 100vw"
-            />
-            <span className="absolute -bottom-3 left-4 rounded-xl bg-secondary px-3 py-1.5 text-sm font-black text-[#061a4f]">
-              Your logo, our water
-            </span>
-          </div>
-
-          <div className="order-1 lg:order-2">
-            <h2 className="text-2xl font-black leading-tight tracking-tight text-slate-950 sm:text-3xl">
-              Branded bottles for events and teams.
-            </h2>
-            <p className="mt-3 max-w-lg text-base leading-7 text-primary/80">
-              Custom-labelled water for launches, weddings, sports days, and campus events. From P144 per case of 24.
+    <section id="corporate" className="border-y border-cyan-100 bg-white px-4 py-5 sm:px-6 lg:px-8">
+      <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+        <div className="flex items-start gap-3 sm:items-center">
+          <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-aqua text-primary ring-1 ring-cyan-100 sm:mt-0">
+            <Sparkles className="h-5 w-5" aria-hidden="true" />
+          </span>
+          <div>
+            <p className="text-sm font-extrabold text-foreground sm:text-base">Branded bottles for events &amp; teams</p>
+            <p className="mt-0.5 text-sm leading-6 text-muted-foreground">
+              Custom labels from P144 per case — weddings, sports days, and campus events.
             </p>
-            <div className="mt-5 flex flex-wrap gap-2">
-              {useCases.map((item) => (
-                <span
-                  key={item}
-                  className="rounded-full bg-cyan-50 px-3.5 py-1.5 text-sm font-semibold text-primary ring-1 ring-primary/10"
-                >
-                  {item}
-                </span>
-              ))}
-            </div>
-            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-              <CustomerButtonLink href="/corporate">Request a quote</CustomerButtonLink>
-              <CustomerButtonLink href="/order?service=personalized" variant="outline">
-                Order branded bottles
-              </CustomerButtonLink>
-            </div>
           </div>
         </div>
+        <CustomerButtonLink href="/corporate" variant="outline" className="h-10 shrink-0 px-5 text-sm">
+          Request a quote
+        </CustomerButtonLink>
       </div>
     </section>
   );

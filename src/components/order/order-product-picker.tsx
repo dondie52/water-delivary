@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Check, ShoppingCart } from "lucide-react";
 import type { PriceItem } from "@/modules/catalog/pricing";
@@ -16,7 +15,7 @@ import {
 import { productImageForService } from "@/lib/catalog/product-image";
 import { formatCurrency, cn } from "@/lib/utils";
 import { BrandImage } from "@/components/customer/brand-image";
-import { CustomerButton } from "@/components/customer/customer-button";
+import { CustomerButton, CustomerButtonLink } from "@/components/customer/customer-button";
 import { useCustomerAuth } from "@/components/customer/customer-auth-provider";
 import { useCart } from "@/components/cart/cart-provider";
 import { QuantityStepper } from "@/components/order/wizard/quantity-stepper";
@@ -166,13 +165,10 @@ export function OrderProductPicker({
       <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm font-semibold text-foreground">Filter by type</p>
         {isAuthenticated && cartCount > 0 ? (
-          <Link
-            href="/cart"
-            className="focus-ring inline-flex min-h-11 items-center gap-1.5 rounded-xl border border-primary/25 bg-white px-3 text-sm font-bold text-primary hover:border-primary hover:bg-aqua/45"
-          >
+          <CustomerButtonLink href="/cart" variant="outline" className="h-11 gap-1.5 px-3 text-sm">
             <ShoppingCart className="h-4 w-4" aria-hidden="true" />
             View cart ({cartCount})
-          </Link>
+          </CustomerButtonLink>
         ) : null}
       </div>
       <div className="mt-3 flex flex-wrap gap-2">
@@ -194,7 +190,7 @@ export function OrderProductPicker({
         ))}
       </div>
 
-      <div className="mt-6 divide-y divide-slate-100 border-y border-slate-100">
+      <div className="mt-6 divide-y divide-cyan-100 border-y border-cyan-100">
         {catalogLoading ? (
           Array.from({ length: 4 }).map((_, index) => <ProductRowSkeleton key={index} />)
         ) : catalogError ? (

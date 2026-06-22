@@ -29,7 +29,7 @@ export function OrderFlowHeader({ currentStep }: { currentStep: WizardStep }) {
   const stepNumber = currentStep === "confirm" ? FLOW_STEPS.length : activeIndex + 1;
 
   return (
-    <header className="border-b border-slate-200 bg-white">
+    <header className="border-b border-cyan-100 bg-white shadow-sm shadow-cyan-950/5">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="flex h-14 items-center justify-between gap-3 sm:h-16">
           <Link href="/" className="focus-ring shrink-0 rounded-lg" aria-label="Fresh Water Market home">
@@ -52,8 +52,8 @@ export function OrderFlowHeader({ currentStep }: { currentStep: WizardStep }) {
           </div>
 
           <CustomerAccountActions
-            loginClassName="border border-slate-200 bg-white text-primary"
-            iconClassName="border border-slate-200 bg-white text-primary"
+            loginClassName="border border-cyan-100 bg-white text-primary shadow-sm shadow-cyan-900/5"
+            iconClassName="border border-cyan-100 bg-white text-primary shadow-sm shadow-cyan-900/5"
           />
         </div>
 
@@ -77,7 +77,7 @@ export function OrderFlowHeader({ currentStep }: { currentStep: WizardStep }) {
                     ? "border-primary bg-primary"
                     : index === activeIndex && currentStep !== "confirm"
                       ? "border-primary bg-primary"
-                      : "border-slate-300 bg-white"
+                      : "border-cyan-200 bg-white"
                 )}
               />
             ))}

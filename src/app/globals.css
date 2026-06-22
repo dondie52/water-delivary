@@ -43,6 +43,15 @@
     @apply rounded-2xl border border-cyan-100 bg-white p-5 shadow-sm shadow-cyan-900/5;
   }
 
+  .customer-card-interactive {
+    @apply transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:border-primary/25;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+  }
+
+  .customer-card-interactive:hover {
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.1);
+  }
+
   .customer-section {
     @apply mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-12 lg:px-8;
   }

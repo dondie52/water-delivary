@@ -18,27 +18,27 @@ export function OrderSuccessScreen({
         <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700">
           <CheckCircle2 className="h-8 w-8" aria-hidden="true" />
         </div>
-        <h1 className="mt-5 text-2xl font-black text-slate-950">Order received!</h1>
-        <p className="mt-2 text-sm leading-6 text-slate-600">
+        <h1 className="mt-5 text-2xl font-black text-foreground">Order received!</h1>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
           Thank you. Your order number is{" "}
-          <span className="font-bold text-slate-950">{order.orderNumber}</span>. Total:{" "}
+          <span className="font-bold text-foreground">{order.orderNumber}</span>. Total:{" "}
           <span className="font-bold text-primary">{formatCurrency(order.total)}</span>.
         </p>
 
         <div className="mt-5 rounded-2xl bg-cyan-50 p-4">
-          <p className="text-sm font-bold text-slate-900">Payment options</p>
-          <ul className="mt-2 space-y-1 text-sm text-slate-700">
+          <p className="text-sm font-bold text-foreground">Payment options</p>
+          <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
             {paymentMethods.map((method) => (
               <li key={method} className="capitalize">{method.replaceAll("_", " ")}</li>
             ))}
           </ul>
         </div>
 
-        <div className="mt-5 rounded-2xl border bg-slate-50 p-4">
+        <div className="mt-5 rounded-2xl border border-cyan-100 bg-aqua/30 p-4">
           <div className="flex items-center justify-between gap-3">
-            <p className="text-sm font-bold text-slate-900">Order summary message</p>
+            <p className="text-sm font-bold text-foreground">Order summary message</p>
             <button
-              className="focus-ring inline-flex items-center gap-1 rounded-sm px-2 py-1 text-xs font-bold text-primary hover:bg-white"
+              className="focus-ring inline-flex min-h-11 items-center gap-1 rounded-xl px-2 py-1 text-xs font-bold text-primary hover:bg-white"
               type="button"
               onClick={() => navigator.clipboard.writeText(order.whatsappMessage)}
             >
@@ -46,7 +46,7 @@ export function OrderSuccessScreen({
               Copy
             </button>
           </div>
-          <pre className="mt-3 whitespace-pre-wrap break-words text-sm leading-6 text-slate-700">{order.whatsappMessage}</pre>
+          <pre className="mt-3 whitespace-pre-wrap break-words text-sm leading-6 text-muted-foreground">{order.whatsappMessage}</pre>
         </div>
 
         <div className="mt-5 grid gap-3">

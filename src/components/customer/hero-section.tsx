@@ -1,6 +1,5 @@
 import Link from "next/link";
 import {
-  Building2,
   CheckCircle2,
   Droplets,
   MapPin,
@@ -30,13 +29,11 @@ type CategoryItem = {
 };
 
 const categories: CategoryItem[] = [
-  { label: "Water Refill", href: "/order?service=refill", icon: Droplets, image: BRAND_ASSETS.categories.refill },
-  { label: "Bottled Water", href: "/order?service=bottled", icon: Package, image: BRAND_ASSETS.categories.bottled },
-  { label: "Branded Bottles", href: "/order?service=personalized", icon: Sparkles, image: BRAND_ASSETS.categories.branded },
-  { label: "Ice Supply", href: "/order?service=ice", icon: Snowflake, image: BRAND_ASSETS.categories.ice },
-  { label: "Student Delivery", href: "/order", icon: Truck, image: BRAND_ASSETS.categories.delivery },
-  { label: "Campus Pickup", href: "/#pickup", icon: MapPin, image: BRAND_ASSETS.categories.pickup },
-  { label: "Corporate", href: "/corporate", icon: Building2, image: BRAND_ASSETS.categories.corporate }
+  { label: "Refills", href: "/order?service=refill", icon: Droplets, image: BRAND_ASSETS.categories.refill },
+  { label: "Bottled", href: "/order?service=bottled", icon: Package, image: BRAND_ASSETS.categories.bottled },
+  { label: "Branded", href: "/order?service=personalized", icon: Sparkles, image: BRAND_ASSETS.categories.branded },
+  { label: "Ice", href: "/order?service=ice", icon: Snowflake, image: BRAND_ASSETS.categories.ice },
+  { label: "Delivery", href: "/order", icon: Truck, image: BRAND_ASSETS.categories.delivery }
 ];
 
 export function HeroSection({ whatsappNumber = FWM_WHATSAPP }: { whatsappNumber?: string }) {
@@ -98,7 +95,7 @@ export function HeroSection({ whatsappNumber = FWM_WHATSAPP }: { whatsappNumber?
           <BrandImage
             src={BRAND_ASSETS.heroBanner}
             alt="Fresh Water Market bottled water, refills, and branded bottles"
-            className="relative z-10 mx-auto aspect-[4/3] w-full max-w-xl rounded-3xl object-contain"
+            className="relative z-10 mx-auto aspect-[4/3] w-full max-w-xl rounded-2xl object-contain"
             fit="contain"
             fallbackLabel="Fresh Water Market delivery"
             width={1000}
@@ -111,7 +108,7 @@ export function HeroSection({ whatsappNumber = FWM_WHATSAPP }: { whatsappNumber?
 
       <div className="relative mx-auto max-w-6xl px-4 pb-12 sm:px-6 lg:px-8">
         <p className="text-sm font-bold text-foreground">What are you looking for?</p>
-        <div className="mt-5 flex gap-5 overflow-x-auto pb-2 sm:flex-wrap sm:justify-start sm:overflow-visible">
+        <div className="-mx-1 flex gap-3 overflow-x-auto px-1 pb-1 sm:mx-0 sm:flex-wrap sm:justify-start sm:gap-4 sm:overflow-visible sm:px-0">
           {categories.map((category) => {
             const Icon = category.icon;
 
@@ -119,22 +116,22 @@ export function HeroSection({ whatsappNumber = FWM_WHATSAPP }: { whatsappNumber?
               <Link
                 key={category.label}
                 href={category.href}
-                className="focus-ring group flex w-20 shrink-0 flex-col items-center gap-2 text-center"
+                className="focus-ring group flex min-h-11 min-w-[4.75rem] shrink-0 flex-col items-center justify-center gap-2 rounded-xl px-1 py-1 text-center transition-colors hover:bg-aqua/40"
               >
-                <span className="relative flex h-16 w-16 items-center justify-center overflow-hidden rounded-full bg-aqua text-primary ring-1 ring-cyan-100 transition duration-200 group-hover:ring-2 group-hover:ring-primary">
+                <span className="relative flex h-[4.5rem] w-[4.5rem] items-center justify-center overflow-hidden rounded-full bg-aqua text-primary ring-1 ring-cyan-100 transition duration-200 group-hover:ring-2 group-hover:ring-primary">
                   <Icon className="h-6 w-6" aria-hidden="true" />
                   <BrandImage
                     src={category.image}
-                    alt={category.label}
+                    alt=""
                     className="absolute inset-0 h-full w-full"
                     fit="cover"
                     fallbackLabel=""
                     width={128}
                     height={128}
-                    sizes="64px"
+                    sizes="72px"
                   />
                 </span>
-                <span className="text-[11px] font-bold leading-tight text-foreground">{category.label}</span>
+                <span className="text-xs font-bold leading-tight text-foreground">{category.label}</span>
               </Link>
             );
           })}

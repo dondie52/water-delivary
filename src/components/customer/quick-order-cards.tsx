@@ -35,7 +35,7 @@ export function QuickOrderCards({ catalog = [] }: { catalog?: PriceItem[] }) {
             <h2 className="text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">
               Order in under a minute
             </h2>
-            <p className="mt-2 max-w-2xl text-base leading-7 text-primary/80">
+            <p className="mt-2 max-w-2xl text-base leading-7 text-muted-foreground">
               Tap a service, choose pickup or delivery, then confirm with your phone number.
             </p>
           </div>
@@ -52,7 +52,7 @@ export function QuickOrderCards({ catalog = [] }: { catalog?: PriceItem[] }) {
               <Link
                 key={card.type}
                 href={`/order?service=${card.type}`}
-                className="group customer-card flex min-w-64 flex-col overflow-hidden p-0 transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:border-primary/25 hover:shadow-md hover:shadow-cyan-900/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:min-w-0"
+                className="group customer-card customer-card-interactive flex min-w-64 flex-col overflow-hidden p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:min-w-0"
               >
                 <div className="relative aspect-[16/10] bg-aqua/50">
                   <BrandImage
@@ -70,9 +70,9 @@ export function QuickOrderCards({ catalog = [] }: { catalog?: PriceItem[] }) {
                 </div>
                 <div className="flex flex-1 flex-col p-4">
                   <h3 className="text-base font-extrabold leading-6 text-foreground">{card.title}</h3>
-                  <p className="mt-1 text-sm text-primary/75">{card.body}</p>
+                  <p className="mt-1 text-sm text-muted-foreground">{card.body}</p>
                   <p className="mt-2 text-sm font-bold text-primary">{card.price}</p>
-                  <span className="mt-3 text-sm font-extrabold text-primary">Order now &gt;</span>
+                  <span className="mt-3 text-sm font-extrabold text-primary group-hover:underline">Order now →</span>
                 </div>
               </Link>
             );

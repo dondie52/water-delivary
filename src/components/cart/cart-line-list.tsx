@@ -59,7 +59,7 @@ export function CartLineList({
                   href={`/order?service=${card.type}`}
                   className="focus-ring group flex min-h-11 items-center gap-3 rounded-xl border border-cyan-100 bg-aqua/30 px-4 py-3 transition-colors hover:border-primary/20 hover:bg-white"
                 >
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white text-primary ring-1 ring-cyan-100">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-white text-primary ring-1 ring-cyan-100">
                     <Icon className="h-4 w-4" aria-hidden="true" />
                   </span>
                   <span className="min-w-0 flex-1 text-left">
