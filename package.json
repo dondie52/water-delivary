@@ -17,6 +17,7 @@
     "typecheck": "tsc --noEmit",
     "db:login": "supabase login",
     "db:link": "supabase link --project-ref szigieqqosdeywlvasrs",
+    "db:config:push": "supabase config push --project-ref szigieqqosdeywlvasrs --yes",
     "db:push": "supabase db push --linked",
     "db:push:dry": "supabase db push --linked --dry-run",
     "db:new": "supabase migration new"
