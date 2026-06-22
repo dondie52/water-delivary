@@ -13,7 +13,7 @@ import {
   REFILL_SIZES,
   type ServiceType
 } from "@/lib/orders/order-wizard";
-import { BRAND_ASSETS } from "@/lib/brand-assets";
+import { productImageForService } from "@/lib/catalog/product-image";
 import { formatCurrency, cn } from "@/lib/utils";
 import { BrandImage } from "@/components/customer/brand-image";
 import { CustomerButton } from "@/components/customer/customer-button";
@@ -32,21 +32,6 @@ const FILTER_OPTIONS: { value: ProductFilter; label: string }[] = [
 ];
 
 const thumbClass = "h-20 w-20 shrink-0 rounded-xl object-cover";
-
-function productImageFor(service: ServiceType): string {
-  switch (service) {
-    case "refill":
-      return BRAND_ASSETS.refill;
-    case "bottled":
-      return BRAND_ASSETS.bottles;
-    case "personalized":
-      return BRAND_ASSETS.personalizedBottles;
-    case "ice":
-      return BRAND_ASSETS.ice;
-    default:
-      return BRAND_ASSETS.bottles;
-  }
-}
 
 function inferServiceForProduct(product: PriceItem): ServiceType {
   if (product.category === "refill" || product.sku === "FWM-REFILL-L") return "refill";
@@ -256,7 +241,7 @@ export function OrderProductPicker({
                 <div key="refill-row" className="py-4">
                   <div className="flex items-start gap-4">
                     <BrandImage
-                      src={productImageFor("refill")}
+                      src={productImageForService("refill")}
                       alt="Water refill"
                       className={thumbClass}
                       fallbackLabel="Refill"
@@ -325,7 +310,7 @@ export function OrderProductPicker({
                 <div key="ice-inquiry" className="py-4">
                   <div className="flex items-start gap-4">
                     <BrandImage
-                      src={productImageFor("ice")}
+                      src={productImageForService("ice")}
                       alt="Ice supply"
                       className={thumbClass}
                       fallbackLabel="Ice"
@@ -381,7 +366,7 @@ export function OrderProductPicker({
               <div key={product.sku} className="py-4">
                 <div className="flex items-start gap-4">
                   <BrandImage
-                    src={productImageFor(inferred)}
+                    src={productImageForService(inferred)}
                     alt={formatProductLabel(product)}
                     className={thumbClass}
                     fallbackLabel={formatProductLabel(product)}

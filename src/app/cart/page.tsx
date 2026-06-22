@@ -3,17 +3,44 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { ShoppingCart } from "lucide-react";
 import { CustomerShell } from "@/components/customer/customer-shell";
-import { CustomerButton, CustomerButtonLink } from "@/components/customer/customer-button";
+import { CustomerButtonLink } from "@/components/customer/customer-button";
 import { CartLineList } from "@/components/cart/cart-line-list";
 import { useCart } from "@/components/cart/cart-provider";
 import { useCustomerAuth } from "@/components/customer/customer-auth-provider";
 import { formatCurrency } from "@/lib/utils";
 
+function CartPageSkeleton() {
+  return (
+    <div className="mt-6 space-y-4" aria-hidden="true">
+      <div className="customer-card animate-pulse divide-y divide-cyan-100 p-0">
+        {[0, 1].map((key) => (
+          <div key={key} className="flex gap-4 p-5">
+            <div className="h-20 w-20 shrink-0 rounded-xl bg-muted" />
+            <div className="flex-1 space-y-2">
+              <div className="h-5 w-40 rounded-lg bg-muted" />
+              <div className="h-4 w-24 rounded-lg bg-muted" />
+              <div className="h-4 w-16 rounded-lg bg-muted" />
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="customer-card animate-pulse space-y-3 p-5">
+        <div className="flex justify-between">
+          <div className="h-4 w-20 rounded-lg bg-muted" />
+          <div className="h-4 w-16 rounded-lg bg-muted" />
+        </div>
+        <div className="h-12 rounded-2xl bg-muted" />
+      </div>
+    </div>
+  );
+}
+
 export default function CartPage() {
   const router = useRouter();
   const { isAuthenticated, isLoading: authLoading } = useCustomerAuth();
-  const { items, subtotal, isLoading, updateQuantity, removeItem } = useCart();
+  const { items, subtotal, isLoading, itemCount, updateQuantity, removeItem } = useCart();
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -25,43 +52,80 @@ export default function CartPage() {
     return null;
   }
 
+  const isPageLoading = authLoading || isLoading;
+  const hasItems = items.length > 0;
+
   return (
-    <CustomerShell showAssistant={false}>
-      <section className="mx-auto max-w-2xl px-4 py-8 sm:px-6">
-        <h1 className="font-serif text-3xl font-semibold tracking-tight text-[#061a4f]">Your cart</h1>
-        <p className="mt-2 text-sm text-slate-600">Review your items before checkout.</p>
-
-        <div className="mt-6">
-          {authLoading || isLoading ? (
-            <p className="text-sm text-slate-600">Loading cart...</p>
-          ) : (
-            <CartLineList items={items} onUpdateQuantity={updateQuantity} onRemove={removeItem} />
-          )}
-        </div>
-
-        {items.length > 0 ? (
-          <div className="mt-6 rounded-lg border border-slate-200 bg-slate-50/80 p-4">
-            <div className="flex items-center justify-between text-sm font-semibold text-[#061a4f]">
-              <span>Subtotal</span>
-              <span>{formatCurrency(subtotal)}</span>
-            </div>
-            <p className="mt-2 text-xs text-slate-500">Delivery fee is calculated at checkout.</p>
-            <CustomerButtonLink href="/order?from=cart" className="mt-4 w-full">
-              Continue to checkout
-            </CustomerButtonLink>
+    <CustomerShell showAssistant={false} compactFooter>
+      <main className={hasItems ? "pb-32 sm:pb-16" : "pb-16"}>
+        <section className="customer-section max-w-2xl">
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary shadow-sm">
+            <ShoppingCart className="h-7 w-7" aria-hidden="true" />
           </div>
-        ) : (
+          <h1 className="mt-5 text-balance text-3xl font-black tracking-tight text-slate-950">Your cart</h1>
+          <p className="mt-2 max-w-[42ch] text-sm leading-6 text-muted-foreground">
+            {isPageLoading
+              ? "Loading your items…"
+              : hasItems
+                ? `${itemCount} ${itemCount === 1 ? "item" : "items"} ready for checkout.`
+                : "Review your items before checkout."}
+          </p>
+
           <div className="mt-6">
-            <CustomerButtonLink href="/order">Browse products</CustomerButtonLink>
+            {isPageLoading ? (
+              <CartPageSkeleton />
+            ) : (
+              <CartLineList items={items} onUpdateQuantity={updateQuantity} onRemove={removeItem} />
+            )}
           </div>
-        )}
 
-        <p className="mt-6 text-center text-sm text-slate-500">
-          <Link href="/order" className="underline underline-offset-2">
-            Continue shopping
-          </Link>
-        </p>
-      </section>
+          {!isPageLoading && hasItems ? (
+            <>
+              <div className="customer-card mt-4 space-y-4 p-5 sm:p-6">
+                <div className="flex items-center justify-between text-sm font-semibold text-foreground">
+                  <span>Subtotal</span>
+                  <span>{formatCurrency(subtotal)}</span>
+                </div>
+                <p className="text-xs leading-5 text-muted-foreground">Delivery fee is calculated at checkout.</p>
+                <CustomerButtonLink href="/order?from=cart" className="w-full">
+                  Continue to checkout
+                </CustomerButtonLink>
+              </div>
+
+              <div
+                className="fixed inset-x-0 bottom-0 z-20 border-t border-cyan-100 bg-white/95 p-4 shadow-[0_-8px_24px_rgba(15,23,42,0.08)] backdrop-blur-sm sm:hidden"
+                aria-label="Cart checkout summary"
+              >
+                <div className="mx-auto flex max-w-2xl items-center justify-between gap-4">
+                  <div>
+                    <p className="text-xs font-semibold text-muted-foreground">Subtotal</p>
+                    <p className="text-base font-bold text-foreground">{formatCurrency(subtotal)}</p>
+                  </div>
+                  <CustomerButtonLink href="/order?from=cart" className="min-w-[10.5rem] shrink-0 px-5">
+                    Checkout
+                  </CustomerButtonLink>
+                </div>
+              </div>
+            </>
+          ) : null}
+
+          <p className="mt-8 text-center text-sm text-muted-foreground">
+            <Link
+              href="/order"
+              className="focus-ring inline-flex min-h-11 items-center rounded-xl px-2 font-semibold text-primary underline underline-offset-2 transition-colors hover:text-primary/80"
+            >
+              Continue shopping
+            </Link>
+            {" · "}
+            <Link
+              href="/account"
+              className="focus-ring inline-flex min-h-11 items-center rounded-xl px-2 font-semibold text-primary underline underline-offset-2 transition-colors hover:text-primary/80"
+            >
+              Your account
+            </Link>
+          </p>
+        </section>
+      </main>
     </CustomerShell>
   );
 }
