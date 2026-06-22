@@ -53,7 +53,7 @@ export default async function Home() {
   return (
     <CustomerShell>
       <main>
-        <HeroSection whatsappNumber={settings.whatsappNumber} />
+        <HeroSection whatsappNumber={settings.whatsappNumber} catalog={catalog} />
         <QuickOrderCards catalog={catalog} />
         <WinterHydrationSection />
         <PricingSection prices={popularPrices} />

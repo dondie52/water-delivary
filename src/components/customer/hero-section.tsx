@@ -11,9 +11,11 @@ import {
   type LucideIcon
 } from "lucide-react";
 import { BrandImage } from "@/components/customer/brand-image";
+import { HeroQuickStartGrid } from "@/components/customer/hero-quick-start-grid";
 import { CustomerButtonLink, CustomerExternalLink } from "@/components/customer/customer-button";
 import { BRAND_ASSETS } from "@/lib/brand-assets";
 import { buildWhatsAppLink, FWM_WHATSAPP } from "@/lib/contact";
+import type { PriceItem } from "@/modules/catalog/pricing";
 
 const trustPoints = [
   { icon: CheckCircle2, label: "Refills from P1.60/L" },
@@ -36,7 +38,13 @@ const categories: CategoryItem[] = [
   { label: "Delivery", href: "/order", icon: Truck, image: BRAND_ASSETS.categories.delivery }
 ];
 
-export function HeroSection({ whatsappNumber = FWM_WHATSAPP }: { whatsappNumber?: string }) {
+export function HeroSection({
+  whatsappNumber = FWM_WHATSAPP,
+  catalog = []
+}: {
+  whatsappNumber?: string;
+  catalog?: PriceItem[];
+}) {
   const whatsappHref = buildWhatsAppLink(undefined, whatsappNumber);
 
   return (
@@ -91,18 +99,8 @@ export function HeroSection({ whatsappNumber = FWM_WHATSAPP }: { whatsappNumber?
           </CustomerExternalLink>
         </div>
 
-        <div className="relative">
-          <BrandImage
-            src={BRAND_ASSETS.heroBanner}
-            alt="Fresh Water Market bottled water, refills, and branded bottles"
-            className="relative z-10 mx-auto aspect-[4/3] w-full max-w-xl rounded-2xl object-contain"
-            fit="contain"
-            fallbackLabel="Fresh Water Market delivery"
-            width={1000}
-            height={750}
-            sizes="(min-width: 1024px) 520px, 100vw"
-            priority
-          />
+        <div className="relative hidden lg:block">
+          <HeroQuickStartGrid catalog={catalog} />
         </div>
       </div>
 
