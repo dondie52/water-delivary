@@ -1,18 +1,24 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { CustomerShell } from "@/components/customer/customer-shell";
 import { CustomerButton } from "@/components/customer/customer-button";
+import { useCustomerAuth } from "@/components/customer/customer-auth-provider";
+import { useCart } from "@/components/cart/cart-provider";
+import { CartLineList } from "@/components/cart/cart-line-list";
+import { buildOrderPayloadFromCartItem, cartItemLineTotal } from "@/lib/cart/cart-checkout";
+import { CartOrderSuccessScreen } from "@/components/order/cart-order-success-screen";
+import { OrderCheckoutBar } from "@/components/order/order-checkout-bar";
 import { OrderConfirmScreen } from "@/components/order/order-confirm-screen";
+import { OrderFlowLayout } from "@/components/order/order-flow-layout";
+import { OrderProductPicker, type ProductFilter } from "@/components/order/order-product-picker";
 import { OrderSuccessScreen } from "@/components/order/order-success-screen";
 import { AdvancedOptionsPanel } from "@/components/order/wizard/advanced-options";
-import { StickyTotalBar } from "@/components/order/wizard/sticky-total-bar";
 import { StepContact } from "@/components/order/wizard/step-contact";
 import { StepFulfillment } from "@/components/order/wizard/step-fulfillment";
-import { StepProduct, buildIceInquiryNotes } from "@/components/order/wizard/step-product";
-import { StepService } from "@/components/order/wizard/step-service";
-import { WizardProgressBar } from "@/components/order/wizard/wizard-progress-bar";
+import { buildIceInquiryNotes } from "@/components/order/wizard/step-product";
 import type { CustomerLookupResult } from "@/app/api/v1/customers/lookup/route";
 import {
   buildReorderInput,
@@ -24,7 +30,6 @@ import {
   hasIceCatalogProduct,
   inferServiceFromOrder,
   validateWizardStep,
-  WIZARD_STEPS,
   type ServiceType,
   type WizardStep
 } from "@/lib/orders/order-wizard";
@@ -68,41 +73,71 @@ function buildInitialForm(): OrderFormInput {
   };
 }
 
-const stepTitles: Record<WizardStep, { title: string; subtitle: string }> = {
-  service: { title: "What do you need?", subtitle: "Choose your water service." },
-  product: { title: "Choose product & quantity", subtitle: "Pick your size and how much you need." },
-  fulfillment: { title: "Pickup or delivery?", subtitle: "We default to the fastest option for you." },
-  contact: { title: "Your phone number", subtitle: "We use this to confirm and track your order." },
-  confirm: { title: "Confirm your order", subtitle: "Review and place your order." }
+const stepTitles: Record<Exclude<WizardStep, "service" | "confirm">, { title: string; subtitle: string }> = {
+  product: { title: "Choose Your Water", subtitle: "Pick your products and quantities." },
+  fulfillment: { title: "Pickup or Delivery", subtitle: "Choose how you want to receive your order." },
+  contact: { title: "Your Details", subtitle: "We use your phone number to confirm and track your order." }
 };
+
+function parseProductFilter(value?: string): ProductFilter {
+  const service = parseService(value);
+  return service ?? "all";
+}
 
 function parseService(value?: string): ServiceType | null {
   if (value === "refill" || value === "bottled" || value === "personalized" || value === "ice") return value;
   return null;
 }
 
+type FieldErrors = {
+  phone?: string;
+  name?: string;
+  deliveryAddress?: string;
+};
+
+function mapValidationError(message: string, step: WizardStep): { fieldErrors: FieldErrors; generalError: string | null } {
+  if (step === "contact") {
+    if (message === "Enter your phone number.") return { fieldErrors: { phone: message }, generalError: null };
+    if (message === "Enter your name.") return { fieldErrors: { name: message }, generalError: null };
+  }
+  if (step === "fulfillment" && message === "Enter where we should deliver.") {
+    return { fieldErrors: { deliveryAddress: message }, generalError: null };
+  }
+  return { fieldErrors: {}, generalError: message };
+}
+
 export function CustomerOrderForm({
   initialPhone,
   reorderOrderNumber,
-  initialService
+  initialService,
+  fromCart = false
 }: {
   initialPhone?: string;
   reorderOrderNumber?: string;
   initialService?: string;
+  fromCart?: boolean;
 }) {
+  const router = useRouter();
+  const { profile, isAuthenticated } = useCustomerAuth();
+  const { items: cartItems, clearCart } = useCart();
+  const cartMode = fromCart && isAuthenticated;
   const [form, setForm] = useState<OrderFormInput>(buildInitialForm);
-  const [service, setService] = useState<ServiceType | null>(parseService(initialService));
-  const [wizardStep, setWizardStep] = useState<WizardStep>(parseService(initialService) ? "product" : "service");
+  const [service, setService] = useState<ServiceType | null>(parseService(initialService) ?? "bottled");
+  const [productFilter, setProductFilter] = useState<ProductFilter>(parseProductFilter(initialService));
+  const [wizardStep, setWizardStep] = useState<WizardStep>(cartMode ? "fulfillment" : "product");
   const [refillSize, setRefillSize] = useState<number | "custom">(20);
   const [customRefill, setCustomRefill] = useState(15);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLookingUp, setIsLookingUp] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [order, setOrder] = useState<CustomerOrder | null>(null);
+  const [cartOrders, setCartOrders] = useState<CustomerOrder[]>([]);
   const [customerLookup, setCustomerLookup] = useState<CustomerLookupResult | null>(null);
   const [settings, setSettings] = useState<PilotSettings>(defaultPilotSettings);
   const [catalogProducts, setCatalogProducts] = useState<PriceItem[]>([]);
   const [catalogLoading, setCatalogLoading] = useState(true);
+  const [catalogError, setCatalogError] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [promo, setPromo] = useState<PromoCode | null>(null);
   const [promoMessage, setPromoMessage] = useState<string | null>(null);
   const [isArtworkUploading, setIsArtworkUploading] = useState(false);
@@ -132,9 +167,47 @@ export function CustomerOrderForm({
   }, [service, form.refillLitres, form.quantity, form.productSku, isIceInquiry, totals.selectedProduct?.name]);
 
   const nextSlot = useMemo(() => getNextAvailableSlot(availability), [availability]);
-  const isReturningCustomer = Boolean(customerLookup?.lastOrder);
+  const isReturningCustomer = Boolean(customerLookup?.lastOrder) || Boolean(profile);
   const needsName = !isReturningCustomer && !form.customerName.trim();
   const slotLabel = form.deliverySlot ?? nextSlot ?? "Next available";
+
+  const cartLines = useMemo(
+    () =>
+      cartItems.map((item) => ({
+        name: item.productName,
+        detail:
+          item.serviceType === "refill"
+            ? `${item.refillLitres}L · ${item.containerCount} container(s)`
+            : `Qty ${item.quantity}`,
+        total: cartItemLineTotal(item)
+      })),
+    [cartItems]
+  );
+
+  const cartSubtotal = useMemo(() => cartLines.reduce((sum, line) => sum + line.total, 0), [cartLines]);
+
+  const cartCheckoutTotals = useMemo(() => {
+    const deliveryFee =
+      form.fulfillmentType === "delivery" && cartItems.length > 0 ? settings.studentDeliveryFee * cartItems.length : 0;
+    return { total: cartSubtotal + deliveryFee, deliveryFee };
+  }, [cartSubtotal, cartItems.length, form.fulfillmentType, settings.studentDeliveryFee]);
+
+  useEffect(() => {
+    if (!cartMode) return;
+    if (cartItems.length === 0 && !order && cartOrders.length === 0) {
+      router.replace("/cart");
+    }
+  }, [cartMode, cartItems.length, order, cartOrders.length, router]);
+
+  useEffect(() => {
+    if (profile) {
+      setForm((current) => ({
+        ...current,
+        customerName: profile.fullName || current.customerName,
+        phoneNumber: profile.phoneNumber || current.phoneNumber
+      }));
+    }
+  }, [profile]);
 
   useEffect(() => {
     if (serviceInitialized.current || !initialService) return;
@@ -179,18 +252,41 @@ export function CustomerOrderForm({
   useEffect(() => {
     async function loadCatalog() {
       setCatalogLoading(true);
+      setCatalogError(false);
       try {
         const response = await fetch("/api/v1/catalog/products", { cache: "no-store" });
         if (response.ok) {
           const data = (await response.json()).data as PriceItem[];
           setCatalogProducts(data);
+        } else {
+          setCatalogError(true);
         }
+      } catch {
+        setCatalogError(true);
       } finally {
         setCatalogLoading(false);
       }
     }
 
     loadCatalog();
+  }, []);
+
+  const reloadCatalog = useCallback(async () => {
+    setCatalogLoading(true);
+    setCatalogError(false);
+    try {
+      const response = await fetch("/api/v1/catalog/products", { cache: "no-store" });
+      if (response.ok) {
+        const data = (await response.json()).data as PriceItem[];
+        setCatalogProducts(data);
+      } else {
+        setCatalogError(true);
+      }
+    } catch {
+      setCatalogError(true);
+    } finally {
+      setCatalogLoading(false);
+    }
   }, []);
 
   const lookupCustomer = useCallback(async (phone: string) => {
@@ -314,6 +410,13 @@ export function CustomerOrderForm({
     setError(null);
   }
 
+  function handleFilterChange(nextFilter: ProductFilter) {
+    setProductFilter(nextFilter);
+    if (nextFilter !== "all") {
+      handleServiceSelect(nextFilter);
+    }
+  }
+
   function handleRefillSize(size: number) {
     if (size === -1) {
       setRefillSize("custom");
@@ -399,44 +502,58 @@ export function CustomerOrderForm({
     }));
   }
 
+  function applyStepValidation(message: string | null, step: WizardStep) {
+    if (!message) {
+      setFieldErrors({});
+      setError(null);
+      return true;
+    }
+    const mapped = mapValidationError(message, step);
+    setFieldErrors(mapped.fieldErrors);
+    setError(mapped.generalError);
+    return false;
+  }
+
   function goBack() {
-    const index = WIZARD_STEPS.indexOf(wizardStep);
+    const stepOrder: WizardStep[] = ["product", "fulfillment", "contact"];
+    const index = stepOrder.indexOf(wizardStep);
     if (index > 0) {
-      setWizardStep(WIZARD_STEPS[index - 1]);
+      setWizardStep(stepOrder[index - 1]);
+      setFieldErrors({});
       setError(null);
     }
   }
 
   function goNext() {
-    const stepError = validateWizardStep(wizardStep, form, service, { needsName });
-    if (stepError) {
-      setError(stepError);
+    if (wizardStep === "product" && isAuthenticated) {
+      router.push("/cart");
       return;
     }
 
-    if (wizardStep === "service" && service) {
-      setWizardStep("product");
-      setError(null);
+    const stepError = validateWizardStep(wizardStep, form, service, { needsName: cartMode ? false : needsName });
+    if (!applyStepValidation(stepError, wizardStep)) {
       return;
     }
 
-    const index = WIZARD_STEPS.indexOf(wizardStep);
-    if (index < WIZARD_STEPS.length - 1) {
-      setWizardStep(WIZARD_STEPS[index + 1]);
+    const stepOrder: WizardStep[] = ["product", "fulfillment", "contact", "confirm"];
+    const index = stepOrder.indexOf(wizardStep);
+    if (index < stepOrder.length - 2) {
+      setWizardStep(stepOrder[index + 1]);
+      setFieldErrors({});
       setError(null);
     }
   }
 
   function goToConfirm() {
-    const contactError = validateWizardStep("contact", form, service, { needsName });
-    if (contactError) {
-      setError(contactError);
+    const contactError = validateWizardStep("contact", form, service, { needsName: cartMode ? false : needsName });
+    if (!applyStepValidation(contactError, "contact")) {
       return;
     }
     if (form.fulfillmentType === "delivery" && !form.deliverySlot) {
       setError("No delivery slots available. Try tomorrow.");
       return;
     }
+    setFieldErrors({});
     setError(null);
     setWizardStep("confirm");
   }
@@ -444,7 +561,8 @@ export function CustomerOrderForm({
   async function submitOrder() {
     if (form.fulfillmentType === "delivery" && !form.deliveryAddress?.trim()) {
       setWizardStep("fulfillment");
-      setError("Enter where we should deliver.");
+      setFieldErrors({ deliveryAddress: "Enter where we should deliver." });
+      setError(null);
       return;
     }
 
@@ -452,6 +570,35 @@ export function CustomerOrderForm({
     setError(null);
 
     try {
+      if (cartMode && cartItems.length > 0) {
+        const placed: CustomerOrder[] = [];
+
+        for (const item of cartItems) {
+          const payload = buildOrderPayloadFromCartItem(item, form);
+          const response = await fetch("/api/v1/customer-orders", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ ...payload, paymentMethod: form.paymentMethod ?? "cash" })
+          });
+          const body = await response.json();
+
+          if (!response.ok) {
+            throw new Error(body.error ?? `Could not submit ${item.productName}`);
+          }
+
+          placed.push(body.data);
+        }
+
+        await clearCart();
+
+        if (typeof window !== "undefined" && form.phoneNumber) {
+          localStorage.setItem(LAST_PHONE_KEY, form.phoneNumber);
+        }
+
+        setCartOrders(placed);
+        return;
+      }
+
       const response = await fetch("/api/v1/customer-orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -499,15 +646,26 @@ export function CustomerOrderForm({
 
   function resetForm() {
     setOrder(null);
+    setCartOrders([]);
     setForm(buildInitialForm());
-    setService(null);
+    setService("bottled");
+    setProductFilter("all");
     setRefillSize(20);
-    setWizardStep("service");
+    setWizardStep(fromCart && isAuthenticated ? "fulfillment" : "product");
     setCustomerLookup(null);
     setPromo(null);
     setPromoMessage(null);
     setError(null);
+    setFieldErrors({});
     setForceAdvancedOpen(false);
+  }
+
+  if (cartOrders.length > 0) {
+    return (
+      <CustomerShell showAssistant={false} compactFooter>
+        <CartOrderSuccessScreen orders={cartOrders} onPlaceAnother={resetForm} />
+      </CustomerShell>
+    );
   }
 
   if (order) {
@@ -519,173 +677,245 @@ export function CustomerOrderForm({
   }
 
   if (wizardStep === "confirm") {
+    const confirmTotals = cartMode ? cartCheckoutTotals : { total: totals.total, deliveryFee: totals.deliveryFee };
+    const confirmIceInquiry = cartMode ? cartItems.some((item) => item.sku === "FWM-ICE-INQUIRY") : isIceInquiry;
+    const placeOrderLabel = isSubmitting
+      ? "Placing order..."
+      : cartMode && cartItems.length > 1
+        ? "Place orders"
+        : "Place Order";
+
     return (
-      <CustomerShell showAssistant={false} compactFooter>
-        <OrderConfirmScreen
-          form={form}
-          service={service}
-          productLine={productLine}
-          totals={{ total: totals.total, deliveryFee: totals.deliveryFee }}
-          isIceInquiry={isIceInquiry}
-          isSubmitting={isSubmitting}
-          error={error}
-          onBack={() => {
-            setWizardStep("contact");
-            setError(null);
-          }}
+      <OrderFlowLayout
+        currentStep="confirm"
+        mobileCheckoutBar={
+          <OrderCheckoutBar
+            label={placeOrderLabel}
+            total={confirmIceInquiry ? undefined : confirmTotals.total}
+            quoteLabel={confirmIceInquiry ? "Contact for quote" : undefined}
+            disabled={isSubmitting}
+            onClick={submitOrder}
+          />
+        }
+      >
+          <button
+            type="button"
+            className="focus-ring mb-5 inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline"
+            onClick={() => {
+              setWizardStep("contact");
+              setError(null);
+            }}
+          >
+            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+            Back
+          </button>
+          <OrderConfirmScreen
+            form={form}
+            service={service}
+            productLine={cartMode ? `${cartItems.length} cart item(s)` : productLine}
+            cartLines={cartMode ? cartLines : undefined}
+            totals={confirmTotals}
+            isIceInquiry={confirmIceInquiry}
+            isSubmitting={isSubmitting}
+            error={error}
           onSubmit={submitOrder}
         />
-      </CustomerShell>
+      </OrderFlowLayout>
     );
   }
 
-  const { title, subtitle } = stepTitles[wizardStep];
-  const showStickyTotal = wizardStep === "product" || wizardStep === "fulfillment" || wizardStep === "contact";
+  const stepMeta = wizardStep === "product" || wizardStep === "fulfillment" || wizardStep === "contact" ? stepTitles[wizardStep] : null;
   const continueDisabled =
-    (wizardStep === "service" && !service) ||
-    (wizardStep === "product" && catalogLoading && service !== "refill") ||
-    (wizardStep === "product" && service === "personalized" && isArtworkUploading);
+    cartMode
+      ? false
+      : !service ||
+        (wizardStep === "product" && catalogLoading) ||
+        (wizardStep === "product" && service === "personalized" && isArtworkUploading);
+
+  const continueLabel =
+    wizardStep === "product"
+      ? isAuthenticated
+        ? "View cart"
+        : isArtworkUploading
+          ? "Uploading artwork..."
+          : catalogLoading
+            ? "Loading products..."
+            : "Add Products to Continue"
+      : wizardStep === "fulfillment"
+        ? "Continue"
+        : "Review order";
+
+  const reviewDisabled =
+    !settings.pilotActive ||
+    todayOrderingClosed ||
+    Boolean(availability.find((slot) => slot.label === form.deliverySlot)?.isFull && form.fulfillmentType === "delivery");
+
+  const checkoutTotal = cartMode ? cartCheckoutTotals.total : totals.total;
+  const checkoutQuote = cartMode
+    ? undefined
+    : isIceInquiry
+      ? "Contact for quote"
+      : undefined;
+  const showCheckoutTotal = wizardStep !== "contact" && (cartMode ? checkoutTotal > 0 : checkoutTotal > 0 || isIceInquiry);
+
+  const handleCheckoutAction = () => {
+    if (wizardStep === "contact") {
+      goToConfirm();
+    } else {
+      goNext();
+    }
+  };
+
+  const checkoutDisabled = wizardStep === "contact" ? reviewDisabled : continueDisabled;
 
   return (
-    <CustomerShell className={showStickyTotal ? "pb-20" : "pb-6"}>
-      <section className="mx-auto min-h-[calc(100vh-4rem)] max-w-2xl px-4 py-5 sm:px-6 sm:py-8">
-        {wizardStep === "service" ? (
-          <div className="mb-5 rounded-2xl border border-cyan-100 bg-white px-5 py-5 text-[#061a4f] shadow-sm shadow-cyan-900/5 sm:px-6">
-            <p className="text-sm font-bold text-primary">Fresh Water Market ordering</p>
-            <h1 className="mt-2 text-2xl font-extrabold tracking-tight sm:text-3xl">Order in under a minute</h1>
-            <p className="mt-2 max-w-xl text-sm leading-6 text-primary/75">
-              Pick your service, choose pickup or delivery, and confirm with your phone number.
-            </p>
-          </div>
-        ) : (
-          <p className="mb-4 text-sm font-bold text-primary">Fresh Water Market ordering</p>
-        )}
-
-        <WizardProgressBar currentStep={wizardStep} />
-
-        {wizardStep !== "service" ? (
+    <OrderFlowLayout
+      currentStep={wizardStep}
+      mobileCheckoutBar={
+          <OrderCheckoutBar
+            label={wizardStep === "contact" ? "Review order" : continueLabel}
+            total={showCheckoutTotal && !checkoutQuote ? checkoutTotal : undefined}
+            quoteLabel={checkoutQuote}
+            disabled={checkoutDisabled}
+            onClick={handleCheckoutAction}
+          />
+        }
+      >
+        {wizardStep !== "product" ? (
           <button
             type="button"
-            className="focus-ring mb-4 inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline"
+            className="focus-ring mb-5 inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline"
             onClick={goBack}
           >
-            <ArrowLeft className="h-4 w-4" />
+            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
             Back
           </button>
         ) : null}
 
-        <div className="rounded-2xl border border-cyan-100 bg-white p-5 shadow-sm shadow-cyan-900/5 sm:p-6">
-          <h2 className="text-2xl font-extrabold tracking-tight text-[#061a4f]">{title}</h2>
-          <p className="mt-2 text-sm leading-6 text-primary/75">{subtitle}</p>
+        {wizardStep === "product" ? (
+          <OrderProductPicker
+            filter={productFilter}
+            onFilterChange={handleFilterChange}
+            service={service}
+            form={form}
+            catalog={catalogProducts}
+            catalogLoading={catalogLoading}
+            catalogError={catalogError}
+            onRetryCatalog={reloadCatalog}
+            refillSize={refillSize}
+            customRefill={customRefill}
+            onSelectProduct={handleSelectProduct}
+            onSelectService={handleServiceSelect}
+            onRefillSize={handleRefillSize}
+            onCustomRefill={handleCustomRefill}
+            onQuantityChange={handleQuantityChange}
+            onContainerCountChange={handleContainerCountChange}
+            onCartError={setError}
+          />
+        ) : stepMeta ? (
+          <>
+            <div aria-live="polite" aria-atomic="true">
+              <h1 className="text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">{stepMeta.title}</h1>
+              <p className="mt-3 text-sm leading-6 text-muted-foreground">{stepMeta.subtitle}</p>
+            </div>
+          </>
+        ) : null}
 
-          {!settings.pilotActive || todayOrderingClosed ? (
-            <p className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-sm font-semibold text-amber-900">
-              {settings.pilotActive ? "Today's delivery windows have passed. Please order for the next delivery day." : settings.orderCutoffMessage}
-            </p>
+        {!settings.pilotActive || todayOrderingClosed ? (
+          <p className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-sm font-semibold text-amber-900" role="status">
+            {settings.pilotActive ? "Today's delivery windows have passed. Please order for the next delivery day." : settings.orderCutoffMessage}
+          </p>
+        ) : null}
+
+        <div className="mt-6">
+          {cartMode && wizardStep === "fulfillment" ? (
+            <div className="mb-6">
+              <h2 className="text-sm font-semibold text-foreground">Cart summary</h2>
+              <div className="mt-3">
+                <CartLineList items={cartItems} readOnly onUpdateQuantity={async () => undefined} onRemove={async () => undefined} />
+              </div>
+            </div>
           ) : null}
 
-          <div className="mt-6">
-            {wizardStep === "service" ? (
-              <StepService selected={service} catalog={catalogProducts} onSelect={handleServiceSelect} />
-            ) : null}
+          {wizardStep === "fulfillment" ? (
+            <StepFulfillment
+              form={form}
+              availability={availability}
+              slotLabel={slotLabel}
+              deliveryAddressError={fieldErrors.deliveryAddress}
+              onFulfillmentType={(type) => {
+                updateForm("fulfillmentType", type);
+                setFieldErrors((current) => ({ ...current, deliveryAddress: undefined }));
+              }}
+              onPickupLocation={(location) => updateForm("pickupLocation", location)}
+              onDeliverySlot={(slot) => updateForm("deliverySlot", slot)}
+              onDeliveryAddress={(address) => {
+                updateForm("deliveryAddress", address);
+                setFieldErrors((current) => ({ ...current, deliveryAddress: undefined }));
+              }}
+            />
+          ) : null}
 
-            {wizardStep === "product" && service ? (
-              <StepProduct
-                service={service}
+          {wizardStep === "contact" ? (
+            <>
+              <StepContact
                 form={form}
-                catalog={catalogProducts}
-                catalogLoading={catalogLoading}
-                refillSize={refillSize}
-                customRefill={customRefill}
-                onSelectProduct={handleSelectProduct}
-                onRefillSize={handleRefillSize}
-                onCustomRefill={handleCustomRefill}
-                onQuantityChange={handleQuantityChange}
-                onContainerCountChange={service === "refill" ? handleContainerCountChange : undefined}
-                onUpdate={updateForm}
-                onUploadArtwork={uploadArtwork}
+                needsName={needsName}
+                isLookingUp={isLookingUp}
+                customerLookup={customerLookup}
+                phoneError={fieldErrors.phone}
+                nameError={fieldErrors.name}
+                onPhoneChange={(phone) => {
+                  handlePhoneChange(phone);
+                  setFieldErrors((current) => ({ ...current, phone: undefined }));
+                }}
+                onNameChange={(name) => {
+                  updateForm("customerName", name);
+                  setFieldErrors((current) => ({ ...current, name: undefined }));
+                }}
+                onOrderAgain={handleOrderAgain}
               />
-            ) : null}
-
-            {wizardStep === "fulfillment" ? (
-              <StepFulfillment
-                form={form}
-                availability={availability}
-                slotLabel={slotLabel}
-                onFulfillmentType={(type) => updateForm("fulfillmentType", type)}
-                onPickupLocation={(location) => updateForm("pickupLocation", location)}
-                onDeliverySlot={(slot) => updateForm("deliverySlot", slot)}
-                onDeliveryAddress={(address) => updateForm("deliveryAddress", address)}
-              />
-            ) : null}
-
-            {wizardStep === "contact" ? (
-              <>
-                <StepContact
+              <div className="mt-5">
+                <AdvancedOptionsPanel
                   form={form}
-                  needsName={needsName}
-                  isLookingUp={isLookingUp}
-                  customerLookup={customerLookup}
-                  onPhoneChange={handlePhoneChange}
-                  onNameChange={(name) => updateForm("customerName", name)}
-                  onOrderAgain={handleOrderAgain}
+                  catalog={catalogProducts}
+                  availability={availability}
+                  promoMessage={promoMessage}
+                  promoApplied={Boolean(promo)}
+                  forceOpen={forceAdvancedOpen}
+                  hideContainerCount={service === "refill"}
+                  onUpdate={updateForm}
+                  onContainerCountChange={handleContainerCountChange}
+                  onValidatePromo={validatePromo}
                 />
-                <div className="mt-5">
-                  <AdvancedOptionsPanel
-                    form={form}
-                    catalog={catalogProducts}
-                    availability={availability}
-                    promoMessage={promoMessage}
-                    promoApplied={Boolean(promo)}
-                    forceOpen={forceAdvancedOpen}
-                    hideContainerCount={service === "refill"}
-                    onUpdate={updateForm}
-                    onContainerCountChange={handleContainerCountChange}
-                    onValidatePromo={validatePromo}
-                  />
-                </div>
-              </>
-            ) : null}
-          </div>
-
-          {error ? (
-            <p className="mt-4 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm font-semibold text-red-700">{error}</p>
+              </div>
+            </>
           ) : null}
-
-          <div className="mt-6">
-            {wizardStep === "contact" ? (
-              <CustomerButton
-                type="button"
-                className="w-full"
-                disabled={!settings.pilotActive || todayOrderingClosed || Boolean(availability.find((slot) => slot.label === form.deliverySlot)?.isFull && form.fulfillmentType === "delivery")}
-                onClick={goToConfirm}
-              >
-                Review order
-              </CustomerButton>
-            ) : (
-              <CustomerButton
-                type="button"
-                className="w-full"
-                disabled={continueDisabled}
-                onClick={goNext}
-              >
-                {isArtworkUploading && wizardStep === "product"
-                  ? "Uploading artwork..."
-                  : catalogLoading && wizardStep === "product"
-                    ? "Loading products..."
-                    : "Continue"}
-              </CustomerButton>
-            )}
-          </div>
         </div>
 
-        {showStickyTotal ? (
-          <StickyTotalBar
-            total={totals.total}
-            quoteLabel={isIceInquiry ? "Contact for quote" : undefined}
-          />
+        {error ? (
+          <p className="mt-4 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm font-semibold text-red-700" role="alert">
+            {error}
+          </p>
         ) : null}
-      </section>
-    </CustomerShell>
+
+        <div className="mt-8 hidden lg:block">
+          {wizardStep === "contact" ? (
+            <CustomerButton type="button" className="w-full" disabled={reviewDisabled} onClick={goToConfirm}>
+              Review order
+            </CustomerButton>
+          ) : (
+            <CustomerButton type="button" className="w-full" disabled={continueDisabled} onClick={goNext}>
+              {continueLabel}
+            </CustomerButton>
+          )}
+        </div>
+
+        {showCheckoutTotal ? (
+          <p className="mt-3 hidden text-center text-sm font-semibold text-muted-foreground lg:block">
+            {checkoutQuote ?? `Estimated total: P${checkoutTotal.toFixed(2)}`}
+          </p>
+        ) : null}
+      </OrderFlowLayout>
   );
 }

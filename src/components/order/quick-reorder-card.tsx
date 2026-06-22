@@ -21,20 +21,19 @@ export function QuickReorderCard({
       : lastOrder.pickupLocation ?? "campus pickup";
 
   return (
-    <div className="rounded-2xl border border-primary/20 bg-gradient-to-br from-cyan-50 to-white p-4 shadow-sm ring-1 ring-primary/10">
-      <p className="text-xs font-bold uppercase tracking-wide text-primary">Welcome back</p>
-      <p className="mt-1 text-lg font-black text-slate-950">{firstName}</p>
-      <p className="mt-3 text-sm font-semibold text-slate-500">Last order</p>
-      <p className="mt-1 text-sm font-bold text-slate-900">{formatOrderLineItem(lastOrder)}</p>
-      <p className="mt-2 text-sm text-slate-600">
+    <div className="rounded-xl border border-primary/20 bg-aqua/45 p-4">
+      <p className="text-sm font-semibold text-primary">Welcome back, {firstName}</p>
+      <p className="mt-3 text-sm font-semibold text-muted-foreground">Last order</p>
+      <p className="mt-1 text-sm font-bold text-foreground">{formatOrderLineItem(lastOrder)}</p>
+      <p className="mt-2 text-sm text-muted-foreground">
         {lastOrder.fulfillmentType === "delivery" ? "Deliver to" : "Pickup at"}:{" "}
-        <span className="font-semibold text-slate-900">{fulfillmentDetail}</span>
+        <span className="font-semibold text-foreground">{fulfillmentDetail}</span>
       </p>
-      <p className="mt-1 text-sm text-slate-600">
+      <p className="mt-1 text-sm text-muted-foreground">
         Total: <span className="font-bold text-primary">{formatCurrency(lastOrder.total)}</span>
       </p>
       <CustomerButton type="button" className="mt-4 w-full gap-2" onClick={onOrderAgain}>
-        <RotateCcw className="h-4 w-4" />
+        <RotateCcw className="h-4 w-4" aria-hidden="true" />
         Repeat last order
       </CustomerButton>
     </div>

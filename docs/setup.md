@@ -16,7 +16,23 @@ ADMIN_PASSWORD=
 DRIVER_PASSWORD=
 ```
 
-3. Apply Supabase migrations through `0009_phase8_promo_redeem_rpc.sql` (includes Phase 7 marketing tables and Phase 8 promo redeem RPC).
+3. Push Supabase migrations to your remote project (through `0011_customer_auth_cart.sql`).
+
+   **Option A — CLI (recommended for day-to-day work)**
+
+   ```bash
+   npm run db:login
+   npm run db:link
+   npm run db:push
+   ```
+
+   - Use `npm run db:push:dry` first to preview pending migrations.
+   - After schema changes, create a new file with `npm run db:new -- <name>` then `npm run db:push`.
+   - Prefer `npx supabase` / the npm scripts above. The globally installed `supabase` command can fail on Windows (`spawnSync UNKNOWN`); the project dev dependency avoids that.
+
+   **Option B — Cursor Supabase MCP**
+
+   Ask the agent to apply new files under `supabase/migrations/` to project `szigieqqosdeywlvasrs` when the CLI is not linked or login is unavailable.
 
 4. Run seed data:
 

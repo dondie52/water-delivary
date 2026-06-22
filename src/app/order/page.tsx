@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 export default async function OrderPage({
   searchParams
 }: {
-  searchParams: Promise<{ phone?: string; reorder?: string; service?: string; mode?: string }>;
+  searchParams: Promise<{ phone?: string; reorder?: string; service?: string; mode?: string; from?: string }>;
 }) {
   const params = await searchParams;
 
@@ -18,6 +18,7 @@ export default async function OrderPage({
       initialPhone={params.phone}
       reorderOrderNumber={params.reorder}
       initialService={params.service ?? (params.mode === "full" ? undefined : params.mode === "refill" ? "refill" : undefined)}
+      fromCart={params.from === "cart"}
     />
   );
 }

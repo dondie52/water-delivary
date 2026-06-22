@@ -11,9 +11,15 @@
     "generate:brand-media": "node scripts/download-brand-assets.mjs && node scripts/create-marketing-videos.mjs",
     "sync:pictures": "node scripts/sync-pictures-to-brand.mjs",
     "verify:brand-assets": "node scripts/verify-brand-assets.mjs",
+    "screenshots:ui": "node scripts/capture-ui-screenshots.mjs",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "db:login": "supabase login",
+    "db:link": "supabase link --project-ref szigieqqosdeywlvasrs",
+    "db:push": "supabase db push --linked",
+    "db:push:dry": "supabase db push --linked --dry-run",
+    "db:new": "supabase migration new"
   },
   "dependencies": {
     "@21st-sdk/agent": "^0.0.18",
@@ -46,6 +52,7 @@
     "ffmpeg-static": "^5.3.0",
     "playwright": "^1.61.0",
     "postcss": "^8.4.47",
+    "supabase": "^2.107.0",
     "tailwindcss": "^3.4.14",
     "typescript": "^5.6.3"
   }

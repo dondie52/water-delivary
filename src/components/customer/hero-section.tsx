@@ -24,16 +24,17 @@ type CategoryItem = {
   label: string;
   href: string;
   icon: LucideIcon;
+  image: string;
 };
 
 const categories: CategoryItem[] = [
-  { label: "Water Refill", href: "/order?service=refill", icon: Droplets },
-  { label: "Bottled Water", href: "/order?service=bottled", icon: Package },
-  { label: "Branded Bottles", href: "/order?service=personalized", icon: Sparkles },
-  { label: "Ice Supply", href: "/order?service=ice", icon: Snowflake },
-  { label: "Student Delivery", href: "/order", icon: Truck },
-  { label: "Campus Pickup", href: "/#pickup", icon: MapPin },
-  { label: "Corporate", href: "/corporate", icon: Building2 }
+  { label: "Water Refill", href: "/order?service=refill", icon: Droplets, image: BRAND_ASSETS.categories.refill },
+  { label: "Bottled Water", href: "/order?service=bottled", icon: Package, image: BRAND_ASSETS.categories.bottled },
+  { label: "Branded Bottles", href: "/order?service=personalized", icon: Sparkles, image: BRAND_ASSETS.categories.branded },
+  { label: "Ice Supply", href: "/order?service=ice", icon: Snowflake, image: BRAND_ASSETS.categories.ice },
+  { label: "Student Delivery", href: "/order", icon: Truck, image: BRAND_ASSETS.categories.delivery },
+  { label: "Campus Pickup", href: "/#pickup", icon: MapPin, image: BRAND_ASSETS.categories.pickup },
+  { label: "Corporate", href: "/corporate", icon: Building2, image: BRAND_ASSETS.categories.corporate }
 ];
 
 export function HeroSection({ whatsappNumber = FWM_WHATSAPP }: { whatsappNumber?: string }) {
@@ -126,8 +127,18 @@ export function HeroSection({ whatsappNumber = FWM_WHATSAPP }: { whatsappNumber?
                 href={category.href}
                 className="focus-ring group flex w-20 shrink-0 flex-col items-center gap-2 text-center"
               >
-                <span className="flex h-16 w-16 items-center justify-center rounded-full bg-white/10 text-white ring-1 ring-white/25 backdrop-blur-sm transition-colors group-hover:bg-white group-hover:text-[#061a4f]">
-                  <Icon className="h-6 w-6" />
+                <span className="relative flex h-16 w-16 items-center justify-center overflow-hidden rounded-full bg-white/10 text-white ring-1 ring-white/25 backdrop-blur-sm transition duration-200 group-hover:ring-2 group-hover:ring-white group-hover:scale-105">
+                  <Icon className="h-6 w-6" aria-hidden="true" />
+                  <BrandImage
+                    src={category.image}
+                    alt={category.label}
+                    className="absolute inset-0 h-full w-full"
+                    fit="cover"
+                    fallbackLabel=""
+                    width={128}
+                    height={128}
+                    sizes="64px"
+                  />
                 </span>
                 <span className="text-[11px] font-bold leading-tight text-cyan-50">
                   {category.label}

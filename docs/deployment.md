@@ -18,7 +18,7 @@ DRIVER_PASSWORD
 
 ## Supabase
 
-1. Apply every migration in `supabase/migrations` in order.
+1. Push every migration in `supabase/migrations` (see `docs/setup.md` — `npm run db:login`, `npm run db:link`, `npm run db:push`).
 2. Run `supabase/seed.sql`.
 3. Confirm `/admin/deployment`.
 4. Create at least one admin staff user in `/admin/staff`.

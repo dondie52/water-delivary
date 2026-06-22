@@ -3,9 +3,10 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { LogIn, Menu, Phone, ShoppingCart, X } from "lucide-react";
+import { Menu, Phone, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { BrandImage } from "@/components/customer/brand-image";
+import { CustomerAccountActions } from "@/components/customer/customer-account-actions";
 import { BRAND_ASSETS } from "@/lib/brand-assets";
 import { buildPhoneLink } from "@/lib/contact";
 
@@ -146,18 +147,18 @@ export function CustomerHeader() {
             <Phone className="h-5 w-5" />
             Contact
           </a>
-          <Link
-            href="/order"
-            aria-label="Start order"
-            className={cn(
-              "focus-ring inline-flex h-10 w-10 items-center justify-center rounded-xl transition-colors",
+          <CustomerAccountActions
+            loginClassName={
               isHome
-                ? "text-white/90 hover:bg-white/10 hover:text-white"
-                : "text-primary/85 hover:bg-aqua/55 hover:text-primary"
-            )}
-          >
-            <ShoppingCart className="h-5 w-5" />
-          </Link>
+                ? "border border-white/30 bg-white/10 text-white"
+                : "border border-cyan-100 bg-white text-primary shadow-cyan-900/5"
+            }
+            iconClassName={
+              isHome
+                ? "border border-white/30 bg-white/10 text-white"
+                : "border border-cyan-100 bg-white text-primary shadow-cyan-900/5"
+            }
+          />
         </div>
 
         <div className="flex items-center gap-2 md:hidden">
@@ -170,31 +171,20 @@ export function CustomerHeader() {
           >
             Order
           </Link>
-          <Link
-            href="/staff/login"
-            aria-label="Login"
-            className={cn(
-              "focus-ring inline-flex h-10 items-center gap-1.5 rounded-xl px-3 text-sm font-bold shadow-sm",
+          <CustomerAccountActions
+            loginClassName={cn(
+              "shadow-sm",
               isHome
                 ? "border border-white/30 bg-white/10 text-white"
                 : "border border-cyan-100 bg-white text-primary shadow-cyan-900/5"
             )}
-          >
-            <LogIn className="h-4 w-4" />
-            Login
-          </Link>
-          <Link
-            href="/order"
-            aria-label="View cart"
-            className={cn(
-              "focus-ring inline-flex h-10 w-10 items-center justify-center rounded-xl shadow-sm",
+            iconClassName={cn(
+              "shadow-sm",
               isHome
                 ? "border border-white/30 bg-white/10 text-white"
                 : "border border-cyan-100 bg-white text-primary shadow-cyan-900/5"
             )}
-          >
-            <ShoppingCart className="h-5 w-5" />
-          </Link>
+          />
           <button
             type="button"
             className={cn(
